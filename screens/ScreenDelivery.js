@@ -52,6 +52,7 @@ export default function ScreenDelivery({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     justifyContent: "center",
     backgroundColor: "#17212b",
