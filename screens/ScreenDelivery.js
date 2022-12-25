@@ -43,7 +43,6 @@ export default function ScreenDelivery({ navigation }) {
           ItemSeparatorComponent={Seporator}
           data={posts}
           renderItem={({ item }) => <Post el={item} />}
-          ListFooterComponent={<ScrollView style={{ height: 100 }} />}
         />
       )}
     </SafeAreaView>
