@@ -40,7 +40,7 @@ export default function ScreenDelivery({ navigation }) {
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}
-          ItemSeparatorComponent={Seporator}
+          //ItemSeparatorComponent={Seporator}
           data={posts}
           renderItem={({ item }) => <Post el={item} />}
         />

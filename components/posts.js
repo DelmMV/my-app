@@ -41,8 +41,12 @@ export const Post = ({ el }) => (
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    backgroundColor: "#17212b",
+    borderWidth: 1,
+    borderRadius: 10,
+    //borderColor: "#2a4858",
+    padding: 10,
+    margin: 10,
+    backgroundColor: "#182533",
   },
   text: {
     marginBottom: 4,
