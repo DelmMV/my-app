@@ -3,7 +3,7 @@ import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import { featchPost } from "../api/index";
 import * as Notification from "expo-notifications";
-import { StyleSheet, View, Button } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 
 let oldOrder = [];
 
@@ -103,31 +103,17 @@ export default function BackgroundNotification() {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.textContainer}>
-        {/* <Text style={styles.text}>
-          Статус Push-уведомления:{" "}
-          <Text style={styles.text}>
-            {status && BackgroundFetch.BackgroundFetchStatus[status]}
-          </Text>
-        </Text>
-        <Text style={styles.text}>
-          Фоновая задача:{" "}
-          <Text style={styles.text}>
-            {isRegistered ? BACKGROUND_FETCH_TASK : "Not registered yet!"}
-          </Text>
-        </Text> */}
-      </View>
       <View style={styles.textContainer}></View>
-      <Button
-        title={
-          isRegistered
+      <View style={styles.textContainer}></View>
+      <TouchableOpacity onPress={toggleFetchTask}>
+        <Text style={styles.button}>
+          {isRegistered
             ? `Выключить Push-уведомления `
             : `Включить Push-уведомления ${
                 status && BackgroundFetch.BackgroundFetchStatus[status]
-              }`
-        }
-        onPress={toggleFetchTask}
-      />
+              }`}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -146,5 +132,17 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     color: "white",
     alignSelf: "center",
+  },
+  button: {
+    color: "white",
+    height: 35,
+    width: 280,
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    backgroundColor: "green",
+    bottom: 2,
+    textAlignVertical: "center",
+    textAlign: "center",
   },
 });

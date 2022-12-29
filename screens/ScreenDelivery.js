@@ -7,16 +7,17 @@ import {
   ActivityIndicator,
   FlatList,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import { useFetchPosts } from "../hooks/index";
-import { Post, Seporator, Empty } from "../components/index";
+import { Post, Empty } from "../components/index";
 import { StatusBar } from "expo-status-bar";
-import BackgroundNotification from "../components/BackgroundNotification";
+import Navigation from "../components/Navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import View from "@expo/html-elements/build/primitives/View";
 
 export default function ScreenDelivery({ navigation }) {
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
-
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem("AccessToken");
@@ -25,12 +26,22 @@ export default function ScreenDelivery({ navigation }) {
       console.log(e);
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+          paddingTop: 40,
+        }}
+      >
+        <Navigation />
+        <TouchableOpacity onPress={removeValue}>
+          <Text style={styles.button}>Выход</Text>
+        </TouchableOpacity>
+      </View>
       <Text style={styles.topText}>Всего закзов {posts.length}</Text>
-      <Button title="Выход" onPress={removeValue} />
-      <BackgroundNotification />
       <StatusBar style="light" backgroundColor="#17212b" />
       {isLoading ? (
         <ActivityIndicator size="large" />
@@ -39,7 +50,6 @@ export default function ScreenDelivery({ navigation }) {
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}
-          //ItemSeparatorComponent={Seporator}
           data={posts}
           renderItem={({ item }) => <Post el={item} />}
         />
@@ -64,8 +74,18 @@ const styles = StyleSheet.create({
     color: "white",
   },
   topText: {
-    paddingTop: 40,
     color: "white",
     alignSelf: "center",
+  },
+  button: {
+    width: 60,
+    height: 35,
+    color: "white",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    backgroundColor: "green",
+    textAlign: "center",
+    textAlignVertical: "center",
   },
 });
