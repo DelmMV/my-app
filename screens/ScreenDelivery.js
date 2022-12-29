@@ -6,7 +6,6 @@ import {
   Platform,
   ActivityIndicator,
   FlatList,
-  ScrollView,
   Button,
 } from "react-native";
 import { useFetchPosts } from "../hooks/index";

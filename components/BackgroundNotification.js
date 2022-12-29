@@ -3,10 +3,11 @@ import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import { featchPost } from "../api/index";
 import * as Notification from "expo-notifications";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, View, Button } from "react-native";
+
+let oldOrder = [];
 
 const BACKGROUND_FETCH_TASK = "background-fetch";
-
 Notification.setNotificationHandler({
   handleNotification: async () => {
     return {
@@ -27,12 +28,31 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
       },
     });
   };
-  featchPost().then((newPosts) => {
-    if ([...newPosts.filter((e) => e.Status === 12)].length !== 0) {
-      //if ([...newPosts.filter((e) => e.Status === 7)].length !== 0) {
-      pushNotification(newPosts);
+
+  featchPost().then((newOrder) => {
+    if (oldOrder.length === 0) {
+      if ([...newOrder.filter((e) => e.Status === 12)].length !== 0) {
+        pushNotification(newOrder);
+        oldOrder = newOrder;
+        console.log("Обновляем счетчик в ифе обновления счетчика");
+      }
+      oldOrder = newOrder;
+      console.log(`Обновляем счетчик ${oldOrder.length}`);
+    } else if (newOrder.length > oldOrder.length) {
+      console.log(`${newOrder.length} ${oldOrder.length} true`);
+      pushNotification(newOrder);
+      oldOrder = newOrder;
+    } else {
+      console.log(`${newOrder.length} ${oldOrder.length} false`);
     }
   });
+
+  //Old method
+  // featchPost().then((newPosts) => {
+  //   if ([...newPosts.filter((e) => e.Status === 12)].length !== 0) {
+  //     pushNotification(newPosts);
+  //   }
+  // });
   const now = Date.now();
   console.log(
     `Got background fetch call at date: ${new Date(now).toISOString()}`
@@ -43,9 +63,9 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 
 async function registerBackgroundFetchAsync() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 60 * 1, // 1 minutes
+    minimumInterval: 1, // 1 minutes
     stopOnTerminate: false, // android only,
-    startOnBoot: true, // android only
+    startOnBoot: false, // android only
   });
 }
 
@@ -64,7 +84,8 @@ export default function BackgroundNotification() {
   const checkStatusAsync = async () => {
     const status = await BackgroundFetch.getStatusAsync();
     const isRegistered = await TaskManager.isTaskRegisteredAsync(
-      BACKGROUND_FETCH_TASK
+      BACKGROUND_FETCH_TASK,
+      oldOrder
     );
     setStatus(status);
     setIsRegistered(isRegistered);

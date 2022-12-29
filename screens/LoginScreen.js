@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  View,
   TextInput,
   Text,
-  Button,
   StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
-
+import { StatusBar } from "expo-status-bar";
 import { UserLogin } from "../api/UserLogin";
 
 export default function LoginScreen({ navigation }) {
@@ -31,7 +30,9 @@ export default function LoginScreen({ navigation }) {
       });
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="light" backgroundColor="#17212b" />
+
       <Text style={styles.text}>Служба доставки ЦЕХ85</Text>
       <TextInput
         style={[styles.input, styles.shadowProp]}
@@ -52,14 +53,15 @@ export default function LoginScreen({ navigation }) {
           Войти
         </Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 150,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingTop: 250,
     alignItems: "center",
     backgroundColor: "#17212b",
     color: "red",
@@ -78,12 +80,6 @@ const styles = StyleSheet.create({
     borderColor: "red",
     textAlign: "center",
     borderRadius: 10,
-  },
-  shadowProp: {
-    shadowOffset: { width: 3, height: 4 },
-    shadowColor: "#black",
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
   },
 
   button: {
