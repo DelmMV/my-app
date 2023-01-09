@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 export default function SplashScreen({ navigation }) {
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function SplashScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <Text style={styles.text}>
         Цех <Text style={{ color: "white", fontSize: 30 }}>85</Text>
       </Text>

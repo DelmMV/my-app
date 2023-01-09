@@ -108,10 +108,9 @@ export default function BackgroundNotification() {
       <TouchableOpacity onPress={toggleFetchTask}>
         <Text style={styles.button}>
           {isRegistered
-            ? `Выключить Push-уведомления `
-            : `Включить Push-уведомления ${
-                status && BackgroundFetch.BackgroundFetchStatus[status]
-              }`}
+            ? `Выключить уведомления `
+            : `Включить уведомления 
+            `}
         </Text>
       </TouchableOpacity>
     </View>
@@ -135,8 +134,8 @@ const styles = StyleSheet.create({
   },
   button: {
     color: "white",
-    height: 35,
-    width: 280,
+    height: 30,
+    width: 190,
     borderWidth: 1,
     borderRadius: 5,
     padding: 5,

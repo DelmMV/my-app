@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,15 +6,14 @@ import {
   Platform,
   ActivityIndicator,
   FlatList,
-  Button,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { useFetchPosts } from "../hooks/index";
 import { Post, Empty } from "../components/index";
 import { StatusBar } from "expo-status-bar";
 import Navigation from "../components/Navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import View from "@expo/html-elements/build/primitives/View";
 
 export default function ScreenDelivery({ navigation }) {
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
@@ -26,14 +25,25 @@ export default function ScreenDelivery({ navigation }) {
       console.log(e);
     }
   };
+
+  function profit() {
+    let result = 0;
+    posts.forEach((element) => {
+      result = result + element.Price;
+    });
+    return result;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           alignItems: "center",
           paddingTop: 40,
+          marginLeft: 11,
+          marginRight: 11,
         }}
       >
         <Navigation />
@@ -41,7 +51,9 @@ export default function ScreenDelivery({ navigation }) {
           <Text style={styles.button}>Выход</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.topText}>Всего закзов {posts.length}</Text>
+      <Text style={styles.topText}>
+        Всего закзов {posts.length} || Выручка {profit()}₽
+      </Text>
       <StatusBar style="light" backgroundColor="#17212b" />
       {isLoading ? (
         <ActivityIndicator size="large" />
@@ -74,17 +86,15 @@ const styles = StyleSheet.create({
     color: "white",
   },
   topText: {
-    color: "white",
+    color: "#FAEBD7",
     alignSelf: "center",
   },
   button: {
     width: 60,
-    height: 35,
+    height: 30,
     color: "white",
-    borderWidth: 1,
     borderRadius: 5,
-    padding: 5,
-    backgroundColor: "green",
+    backgroundColor: "#8B0000",
     textAlign: "center",
     textAlignVertical: "center",
   },
