@@ -8,21 +8,7 @@ import QRCode from "react-qr-code";
 import { useNavigation } from "@react-navigation/native";
 import AppContext from "../contexts/AppContext";
 import { Audio } from "expo-av";
-
-function addLeadingZero(d) {
-  return d < 10 ? "0" + d : d;
-}
-
-function getUserTime(t) {
-  let tr = t - 840 * 60;
-  let Y = t.getFullYear();
-  let M = addLeadingZero(t.getMonth() + 1);
-  let D = addLeadingZero(t.getDate());
-  let d = days[t.getDay()];
-  let h = addLeadingZero(t.getHours());
-  let m = addLeadingZero(t.getMinutes());
-  return `${h}:${m}`;
-}
+import getUserTime from "./getUserTime.js";
 
 export const Post = ({ el }) => {
   const { counter, setCounter } = useContext(AppContext);

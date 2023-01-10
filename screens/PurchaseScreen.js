@@ -83,9 +83,6 @@ export default function PurchaseScreen({ navigation }) {
           onPress={handlePostOrder}
         />
       </View>
-      {/* <View>
-        <Text style={styles.text}>Общий прайс</Text>
-      </View> */}
     </SafeAreaView>
   );
 }

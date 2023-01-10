@@ -34,6 +34,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyArLAGgB0ve7ZZ3yxdbNyHVGl0HCq16kFQ"
+        }
+      },
       "package": "com.tseh85.myapp"
     },
     "web": {

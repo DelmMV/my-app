@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -25,7 +25,9 @@ export default function ScreenDelivery({ navigation }) {
       console.log(e);
     }
   };
-
+  const handleMap = () => {
+    navigation.push("MapScreen");
+  };
   function profit() {
     let result = 0;
     posts.forEach((element) => {
@@ -47,6 +49,9 @@ export default function ScreenDelivery({ navigation }) {
         }}
       >
         <Navigation />
+        <TouchableOpacity onPress={handleMap}>
+          <Text style={styles.map}>Карта</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={removeValue}>
           <Text style={styles.button}>Выход</Text>
         </TouchableOpacity>
@@ -55,6 +60,7 @@ export default function ScreenDelivery({ navigation }) {
         Всего закзов {posts.length} || Выручка {profit()}₽
       </Text>
       <StatusBar style="light" backgroundColor="#17212b" />
+
       {isLoading ? (
         <ActivityIndicator size="large" />
       ) : (
@@ -95,6 +101,15 @@ const styles = StyleSheet.create({
     color: "white",
     borderRadius: 5,
     backgroundColor: "#8B0000",
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  map: {
+    width: 60,
+    height: 30,
+    color: "white",
+    borderRadius: 5,
+    backgroundColor: "green",
     textAlign: "center",
     textAlignVertical: "center",
   },

@@ -4,6 +4,7 @@ import ScreenDelivery from "../screens/ScreenDelivery";
 import LoginScreen from "../screens/LoginScreen";
 import SplashScreen from "../screens/SplashScreen";
 import PurchaseScreen from "../screens/PurchaseScreen";
+import MapScreen from "../screens/MapScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ const Routers = () => {
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="ScreenDelivery" component={ScreenDelivery} />
       <Stack.Screen name="PurchaseScreen" component={PurchaseScreen} />
+      <Stack.Screen name="MapScreen" component={MapScreen} />
     </Stack.Navigator>
   );
 };

@@ -45,6 +45,7 @@ export default function Purchase({ el }) {
               textAlign: "left",
               fontSize: 12,
               position: "relative",
+              width: 220,
             }}
           >
             {productsSerch()}
