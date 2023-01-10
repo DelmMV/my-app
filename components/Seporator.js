@@ -7,6 +7,6 @@ const styles = StyleSheet.create({
   seporator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: "white",
-    marginHorizontal: 10,
+    marginHorizontal: 30,
   },
 });

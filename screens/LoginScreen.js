@@ -48,10 +48,8 @@ export default function LoginScreen({ navigation }) {
         value={password}
         onChangeText={(text) => setPassword(text)}
       ></TextInput>
-      <TouchableOpacity>
-        <Text style={styles.button} onPress={handleLogin}>
-          Войти
-        </Text>
+      <TouchableOpacity onPress={handleLogin}>
+        <Text style={styles.button}>Войти</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

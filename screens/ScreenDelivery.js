@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,17 +6,17 @@ import {
   Platform,
   ActivityIndicator,
   FlatList,
-  Button,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useFetchPosts } from "../hooks/index";
-import { Post, Seporator, Empty } from "../components/index";
+import { Post, Empty } from "../components/index";
 import { StatusBar } from "expo-status-bar";
-import BackgroundNotification from "../components/BackgroundNotification";
+import Navigation from "../components/Navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ScreenDelivery({ navigation }) {
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
-
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem("AccessToken");
@@ -26,11 +26,34 @@ export default function ScreenDelivery({ navigation }) {
     }
   };
 
+  function profit() {
+    let result = 0;
+    posts.forEach((element) => {
+      result = result + element.Price;
+    });
+    return result;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.topText}>Всего закзов {posts.length}</Text>
-      <Button title="Выход" onPress={removeValue} />
-      <BackgroundNotification />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingTop: 40,
+          marginLeft: 11,
+          marginRight: 11,
+        }}
+      >
+        <Navigation />
+        <TouchableOpacity onPress={removeValue}>
+          <Text style={styles.button}>Выход</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.topText}>
+        Всего закзов {posts.length} || Выручка {profit()}₽
+      </Text>
       <StatusBar style="light" backgroundColor="#17212b" />
       {isLoading ? (
         <ActivityIndicator size="large" />
@@ -39,7 +62,6 @@ export default function ScreenDelivery({ navigation }) {
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}
-          //ItemSeparatorComponent={Seporator}
           data={posts}
           renderItem={({ item }) => <Post el={item} />}
         />
@@ -64,8 +86,16 @@ const styles = StyleSheet.create({
     color: "white",
   },
   topText: {
-    paddingTop: 40,
-    color: "white",
+    color: "#FAEBD7",
     alignSelf: "center",
+  },
+  button: {
+    width: 60,
+    height: 30,
+    color: "white",
+    borderRadius: 5,
+    backgroundColor: "#8B0000",
+    textAlign: "center",
+    textAlignVertical: "center",
   },
 });
