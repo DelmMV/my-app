@@ -1,21 +1,29 @@
-import { Marker } from "react-native-maps";
-import MapView from "react-native-map-clustering";
+import MapView, { Marker } from "react-native-maps";
 import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import AppContext from "../contexts/AppContext";
 import getUserTime from "../components/getUserTime";
 import openMap from "react-native-open-maps";
 import { StatusBar } from "expo-status-bar";
+import DropDownList from "../components/DropDownList";
 
 export default function MapScreen({ navigation }) {
-  const { counter, item } = useContext(AppContext);
-
+  const { value, item } = useContext(AppContext);
+  function filterItem() {
+    if (value === null) {
+      return item;
+    } else {
+      return [...item.filter((e) => e.Status === value)];
+    }
+  }
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <TouchableOpacity onPress={() => navigation.pop()}>
-        <Text style={styles.button}>Back</Text>
+        <Text style={styles.button}> {`< Назад`}</Text>
       </TouchableOpacity>
+      <DropDownList />
+
       <MapView
         style={styles.map}
         mapType="standard"
@@ -24,12 +32,12 @@ export default function MapScreen({ navigation }) {
         initialRegion={{
           latitude: 59.947303,
           longitude: 30.367467,
-          latitudeDelta: 0.1,
-          longitudeDelta: 0.1,
+          latitudeDelta: 0.4,
+          longitudeDelta: 0.4,
         }}
       >
-        {item.length > 0 &&
-          item.map((element) => {
+        {filterItem().length > 0 &&
+          filterItem().map((element) => {
             const goToYosemite = (x, y, map) => {
               openMap({ latitude: x, longitude: y, provider: map });
             };
@@ -68,7 +76,7 @@ export default function MapScreen({ navigation }) {
                   }}
                 >
                   <Text style={colorStatus()}>{element.DeliveryNumber}</Text>
-                  <Text style={{ fontSize: 13 }}>
+                  <Text style={{ fontSize: 13, color: "black" }}>
                     {getUserTime(new Date(element.WishingDate))}
                   </Text>
                 </View>
@@ -95,9 +103,10 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     textAlign: "center",
     textAlignVertical: "center",
-    marginTop: 30,
+    marginTop: 40,
     marginStart: 10,
     marginEnd: 10,
     marginBottom: 3,
+    fontSize: 16,
   },
 });

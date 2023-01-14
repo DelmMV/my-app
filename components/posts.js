@@ -23,13 +23,13 @@ export const Post = ({ el }) => {
 
   const colorStatus = () => {
     if (el.Status === 7) {
-      return { color: "grey", fontSize: 14, fontWeight: "bold" };
+      return { color: "grey", fontSize: 16, fontWeight: "bold" };
     } else if (el.Status === 5) {
-      return { color: "#4169E1", fontSize: 14, fontWeight: "bold" };
+      return { color: "#4169E1", fontSize: 16, fontWeight: "bold" };
     } else if (el.Status === 6) {
-      return { color: "#00FF00", fontSize: 14, fontWeight: "bold" };
+      return { color: "#00FF00", fontSize: 16, fontWeight: "bold" };
     } else if (el.Status === 12) {
-      return { color: "#FFD700", fontSize: 14, fontWeight: "bold" };
+      return { color: "#FFD700", fontSize: 16, fontWeight: "bold" };
     }
   };
 
@@ -43,14 +43,14 @@ export const Post = ({ el }) => {
       wishes += `${element["Name"].slice(0, 1)} `;
     });
   } else {
-    wishes = "НЕТ";
+    wishes = " — ";
   }
 
   let clientComment = "";
   if (el.ClientComment) {
     clientComment = el.ClientComment;
   } else {
-    clientComment = "Без комментария";
+    clientComment = "";
   }
 
   return (
@@ -73,7 +73,8 @@ export const Post = ({ el }) => {
           <Text style={styles.text}>{el.Address}</Text>
         </TouchableOpacity>
         <Text style={styles.text}>
-          Пожелания: <Text style={{ color: "orange" }}>{wishes}</Text>
+          Пожелания:{" "}
+          <Text style={{ color: "orange", fontWeight: "700" }}>{wishes}</Text>
         </Text>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.text}>Клинет: {el.ClientName} </Text>
@@ -91,7 +92,7 @@ export const Post = ({ el }) => {
             style={{
               marginBottom: 4,
               marginEnd: 4,
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: "bold",
               color: "#FAEBD7",
             }}
@@ -109,8 +110,13 @@ export const Post = ({ el }) => {
         <TouchableOpacity onPress={() => handelePurchase(el.OrderId)}>
           <Text style={styles.button}>Состав</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowWishes(!showWishes)}>
-          <Text style={styles.button}>Коммент</Text>
+        <TouchableOpacity
+          disabled={clientComment.length > 0 ? false : true}
+          onPress={() => setShowWishes(!showWishes)}
+        >
+          <Text style={styles.button}>
+            {clientComment.length > 0 ? "Коммент" : "—"}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowContent(!showContent)}>
           <Text style={styles.button}>QR-Код</Text>
@@ -177,19 +183,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#182533",
   },
   text: {
-    marginBottom: 4,
-    marginEnd: 4,
+    marginBottom: 6,
+    marginEnd: 6,
     justifyContent: "center",
     alignItems: "center",
-    fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "400",
     color: "#FAEBD7",
     flex: 1,
+    fontSize: 15,
   },
   title: {
     //alignItems: "center",
     flex: 1,
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#FAEBD7",
   },

@@ -55,22 +55,29 @@ export default function PurchaseScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.pop()}>
-        <Text style={styles.button}>Назад</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => Clipboard.setString(myOrder)}>
-        <Text style={{ color: "green", textAlign: "center", marginBottom: 2 }}>
-          #{myOrder}
+      <View>
+        <TouchableOpacity onPress={() => navigation.pop()}>
+          <Text style={styles.button}>Назад</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Clipboard.setString(myOrder)}>
+          <Text
+            style={{ color: "green", textAlign: "center", marginBottom: 2 }}
+          >
+            #{myOrder}
+          </Text>
+        </TouchableOpacity>
+        <Text style={{ color: "gold", textAlign: "center" }}>
+          Общая стоимость: {myPrice}₽
         </Text>
-      </TouchableOpacity>
-      <Text style={{ color: "gold", textAlign: "center" }}>
-        Общая стоимость: {myPrice}₽
-      </Text>
+      </View>
+
       {isLoading ? (
         <ActivityIndicator size="large" />
       ) : (
         <FlatList
           data={purchase}
+          onRefresh={onRefresh}
+          refreshing={isRefreshing}
           ItemSeparatorComponent={Seporator}
           renderItem={({ item }) => <Purchase el={item} />}
         />

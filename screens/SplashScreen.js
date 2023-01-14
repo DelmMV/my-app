@@ -24,7 +24,7 @@ export default function SplashScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar style="light" />
       <Text style={styles.text}>
-        Цех <Text style={{ color: "white", fontSize: 30 }}>85</Text>
+        Цех <Text style={{ color: "red", fontSize: 30 }}>85</Text>
       </Text>
       <Text style={{ color: "white", fontSize: 30 }}>Доставка</Text>
     </View>
@@ -40,6 +40,6 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "800",
     fontSize: 30,
-    color: "red",
+    color: "white",
   },
 });

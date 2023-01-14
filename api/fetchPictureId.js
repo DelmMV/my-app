@@ -1,11 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-
-export const ApiManager = axios.create({
-  baseURL: "https://app.tseh85.com/Service/api",
-  responseType: "json",
-  withCredentials: true,
-});
+import ApiManager from "./ApiManager";
 
 export async function fetchPictureId(id) {
   const dataToken = await AsyncStorage.getItem("AccessToken");
@@ -19,7 +13,7 @@ export async function fetchPictureId(id) {
     });
     return response !== 200 ? await response.config : [];
   } catch (error) {
-    console.log(error);
+    console.log(`${error} fetchPictureId`);
     return [];
   }
 }

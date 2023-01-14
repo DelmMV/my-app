@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
 import React from "react";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 
@@ -7,11 +7,11 @@ export default function Purchase({ el }) {
     el.PictureId
   );
   const products = el.Products;
-  const productsSerch = () => {
+  const ProductsSerch = () => {
     let products2 = "";
     if (products) {
       products.forEach((element) => {
-        products2 += `— ${element.ProductName}\n`;
+        products2 += `— ${element.ProductName}  ${element.Quantity}шт.\n`;
       });
     }
     return <Text>{products2}</Text>;
@@ -26,16 +26,24 @@ export default function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        <Image
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10,
-            right: 10,
-            top: 5,
-          }}
-          source={{ uri: `${pictureId.baseURL}${pictureId.url}` }}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              right: 10,
+              top: 5,
+            }}
+            source={
+              pictureId.length === 0
+                ? require("../assets/icon.png")
+                : { uri: `${pictureId.baseURL}${pictureId.url}` }
+            }
+          />
+        )}
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.text}>{el.ProductName}</Text>
           <Text style={styles.subText}>{el.CatalogName}</Text>
@@ -48,7 +56,7 @@ export default function Purchase({ el }) {
               width: 220,
             }}
           >
-            {productsSerch()}
+            <ProductsSerch />
           </Text>
         </View>
       </View>
@@ -76,6 +84,7 @@ const styles = StyleSheet.create({
     color: "#FAEBD7",
     textAlign: "left",
     width: 200,
+    fontSize: 16,
   },
   subText: { fontSize: 12, color: "#A9A9A9" },
   price: {

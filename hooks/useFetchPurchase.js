@@ -15,7 +15,7 @@ export function useFetchPurchase(id) {
 
   async function onRefresh() {
     setRefreshing(true);
-    const newPurchase = await featchPost(id);
+    const newPurchase = await fetchPurchase(id);
     setPurchase(newPurchase);
     setRefreshing(false);
   }
