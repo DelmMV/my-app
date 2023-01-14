@@ -52,6 +52,41 @@ export default function PurchaseScreen({ navigation }) {
         console.error(err);
       });
   };
+  const colorStatus = () => {
+    if (myStatus === 7) {
+      return {
+        color: "grey",
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 2,
+      };
+    } else if (myStatus === 5) {
+      return {
+        color: "#4169E1",
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 2,
+      };
+    } else if (myStatus === 6) {
+      return {
+        color: "#00FF00",
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 2,
+      };
+    } else if (myStatus === 12) {
+      return {
+        color: "#FFD700",
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 2,
+      };
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,11 +95,7 @@ export default function PurchaseScreen({ navigation }) {
           <Text style={styles.button}>Назад</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Clipboard.setString(myOrder)}>
-          <Text
-            style={{ color: "green", textAlign: "center", marginBottom: 2 }}
-          >
-            #{myOrder}
-          </Text>
+          <Text style={colorStatus()}>#{myOrder}</Text>
         </TouchableOpacity>
         <Text style={{ color: "gold", textAlign: "center" }}>
           Общая стоимость: {myPrice}₽
