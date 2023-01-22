@@ -3,6 +3,7 @@ import ApiManager from "./ApiManager";
 
 export async function fetchPictureId(id) {
   const dataToken = await AsyncStorage.getItem("AccessToken");
+  console.log(dataToken);
   try {
     const response = await ApiManager(`/image?PictureId=${id}`, {
       method: "GET",
