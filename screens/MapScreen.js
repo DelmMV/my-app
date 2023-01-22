@@ -2,7 +2,7 @@ import MapView, { Marker } from "react-native-maps";
 import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import AppContext from "../contexts/AppContext";
-import getUserTime from "../components/getUserTime";
+import GetUserTime from "../components/GetUserTime";
 import openMap from "react-native-open-maps";
 import { StatusBar } from "expo-status-bar";
 import DropDownList from "../components/DropDownList";
@@ -77,7 +77,7 @@ export default function MapScreen({ navigation }) {
                 >
                   <Text style={colorStatus()}>{element.DeliveryNumber}</Text>
                   <Text style={{ fontSize: 13, color: "black" }}>
-                    {getUserTime(new Date(element.WishingDate))}
+                    {GetUserTime(new Date(element.WishingDate))}
                   </Text>
                 </View>
               </Marker>

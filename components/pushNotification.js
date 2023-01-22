@@ -8,7 +8,7 @@ Notification.setNotificationHandler({
   },
 });
 
-export const pushNotification = () => {
+export const PushNotification = () => {
   Notification.scheduleNotificationAsync({
     content: {
       title: "Заказ",

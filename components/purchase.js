@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import React from "react";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
+import { Image } from "react-native-expo-image-cache";
+import { cacheImage } from "../utils/cacheImage";
 
 export default function Purchase({ el }) {
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
+
   const products = el.Products;
   const ProductsSerch = () => {
     let products2 = "";
@@ -17,6 +20,9 @@ export default function Purchase({ el }) {
     return <Text>{products2}</Text>;
   };
 
+  const preview = { uri: `${pictureId.baseURL}${pictureId.url}` };
+  const uri = `${pictureId.baseURL}${pictureId.url}`;
+  cacheImage(`${pictureId.baseURL}${pictureId.url}`);
   return (
     <View style={styles.container}>
       <View
@@ -30,6 +36,7 @@ export default function Purchase({ el }) {
           <ActivityIndicator size="large" />
         ) : (
           <Image
+            {...{ preview, uri }}
             style={{
               width: 40,
               height: 40,
@@ -37,13 +44,9 @@ export default function Purchase({ el }) {
               right: 10,
               top: 5,
             }}
-            source={
-              pictureId.length === 0
-                ? require("../assets/icon.png")
-                : { uri: `${pictureId.baseURL}${pictureId.url}` }
-            }
           />
         )}
+
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.text}>{el.ProductName}</Text>
           <Text style={styles.subText}>{el.CatalogName}</Text>

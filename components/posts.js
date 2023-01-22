@@ -8,9 +8,11 @@ import QRCode from "react-qr-code";
 import { useNavigation } from "@react-navigation/native";
 import AppContext from "../contexts/AppContext";
 import { Audio } from "expo-av";
-import getUserTime from "./getUserTime.js";
+import GetUserTime from "./GetUserTime.js";
 
 export const Post = ({ el }) => {
+  const [wishes, setWishes] = useState("");
+  const [clientComment, setClientComment] = useState("");
   const { counter, setCounter } = useContext(AppContext);
   const [showContent, setShowContent] = useState(false);
   const [showWishes, setShowWishes] = useState(false);
@@ -37,25 +39,29 @@ export const Post = ({ el }) => {
     openMap({ latitude: x, longitude: y, provider: map });
   };
 
-  let wishes = "";
-  if (el.Wishes.length > 0) {
-    el.Wishes.forEach((element) => {
-      wishes += `${element["Name"].slice(0, 1)} `;
-    });
-  } else {
-    wishes = " — ";
-  }
+  useEffect(() => {
+    if (el.Wishes.length > 0) {
+      let res = "";
+      el.Wishes.forEach((element) => {
+        res += `${element["Name"].slice(0, 1)} `;
+        setWishes(res);
+      });
+    } else {
+      setWishes(" — ");
+    }
+  }, []);
 
-  let clientComment = "";
-  if (el.ClientComment) {
-    clientComment = el.ClientComment;
-  } else {
-    clientComment = "";
-  }
+  useEffect(() => {
+    if (el.ClientComment) {
+      setClientComment(el.ClientComment);
+    } else {
+      setClientComment("");
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <TouchableOpacity
           style={styles.title}
           onPress={() => Clipboard.setString(el.DeliveryNumber)}
@@ -86,7 +92,7 @@ export const Post = ({ el }) => {
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.text}>
-            Желаемое время: {getUserTime(new Date(el.WishingDate))}
+            Желаемое время: {GetUserTime(new Date(el.WishingDate))}
           </Text>
           <Text
             style={{
@@ -193,11 +199,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   title: {
-    //alignItems: "center",
-    flex: 1,
+    //textAlign: "center",
+    width: 125,
+    //flex: 1,
     fontSize: 16,
     fontWeight: "bold",
     color: "#FAEBD7",
+    // borderWidth: 1,
+    // borderRadius: 5,
   },
   button: {
     width: 100,
@@ -211,7 +220,8 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
   status: {
-    color: "#FAEBD7",
+    color: "#FFD700",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

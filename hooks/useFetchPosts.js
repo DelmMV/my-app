@@ -12,7 +12,6 @@ export function useFetchPosts() {
   useEffect(() => {
     featchPost().then((newPosts) => {
       setItem(newPosts);
-      //setPosts([...newPosts.filter((e) => e.Status === 7)]);
       setPosts(newPosts);
       setLoading(false);
     });
