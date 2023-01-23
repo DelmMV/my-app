@@ -21,8 +21,8 @@ export default function Purchase({ el }) {
   };
 
   const preview = { uri: `${pictureId.baseURL}${pictureId.url}` };
+  //const preview = require("../assets/splash.png");
   const uri = `${pictureId.baseURL}${pictureId.url}`;
-  cacheImage(`${pictureId.baseURL}${pictureId.url}`);
   return (
     <View style={styles.container}>
       <View
@@ -32,20 +32,22 @@ export default function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        {isLoading ? (
+        {/* {isLoading ? (
           <ActivityIndicator size="large" />
-        ) : (
-          <Image
-            {...{ preview, uri }}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 10,
-              right: 10,
-              top: 5,
-            }}
-          />
-        )}
+        ) : ( */}
+        <Image
+          {...{ uri, preview }}
+          transitionDuration={100}
+          tint="dark"
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 10,
+            right: 10,
+            top: 5,
+          }}
+        />
+        {/* )} */}
 
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.text}>{el.ProductName}</Text>

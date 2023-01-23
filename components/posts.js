@@ -39,17 +39,17 @@ export const Post = ({ el }) => {
     openMap({ latitude: x, longitude: y, provider: map });
   };
 
-  useEffect(() => {
+  const Wishes = () => {
     if (el.Wishes.length > 0) {
       let res = "";
       el.Wishes.forEach((element) => {
         res += `${element["Name"].slice(0, 1)} `;
-        setWishes(res);
       });
+      return res;
     } else {
-      setWishes(" — ");
+      return "—";
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (el.ClientComment) {
@@ -80,7 +80,9 @@ export const Post = ({ el }) => {
         </TouchableOpacity>
         <Text style={styles.text}>
           Пожелания:{" "}
-          <Text style={{ color: "orange", fontWeight: "700" }}>{wishes}</Text>
+          <Text style={{ color: "orange", fontWeight: "700" }}>
+            <Wishes />
+          </Text>
         </Text>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.text}>Клинет: {el.ClientName} </Text>
