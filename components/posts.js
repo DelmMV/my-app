@@ -1,63 +1,79 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, memo } from "react";
+import AppContext from "../contexts/AppContext";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { days, orderStatus } from "../utils/constans.js";
 import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
-import openMap from "react-native-open-maps";
 import QRCode from "react-qr-code";
 import { useNavigation } from "@react-navigation/native";
-import AppContext from "../contexts/AppContext";
 import { Audio } from "expo-av";
 import GetUserTime from "./GetUserTime.js";
-
-export const Post = ({ el }) => {
-  const [wishes, setWishes] = useState("");
-  const [clientComment, setClientComment] = useState("");
-  const { counter, setCounter } = useContext(AppContext);
+import { showLocation } from "react-native-map-link";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { ColorStatus } from "./ColorStatus";
+import { PostOrder } from "../api/PostOrder";
+import { useFetchPosts } from "../hooks";
+export const Post = memo(function Post({ el }) {
+  const color = ColorStatus(el);
+  const { value2, counter } = useContext(AppContext);
+  const options = {
+    latitude: el.Latitude,
+    longitude: el.Longitude,
+    app: value2,
+    directionsMode: "car",
+  };
+  const { setCounter } = useContext(AppContext);
   const [showContent, setShowContent] = useState(false);
   const [showWishes, setShowWishes] = useState(false);
   const navigation = useNavigation();
+  const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
 
   const handelePurchase = (id) => {
     setCounter(id);
     navigation.push("PurchaseScreen");
   };
-
-  const colorStatus = () => {
-    if (el.Status === 7) {
-      return { color: "grey", fontSize: 16, fontWeight: "bold" };
-    } else if (el.Status === 5) {
-      return { color: "#4169E1", fontSize: 16, fontWeight: "bold" };
-    } else if (el.Status === 6) {
-      return { color: "#00FF00", fontSize: 16, fontWeight: "bold" };
-    } else if (el.Status === 12) {
-      return { color: "#FFD700", fontSize: 16, fontWeight: "bold" };
-    }
-  };
-
-  const goToYosemite = (x, y, map) => {
-    openMap({ latitude: x, longitude: y, provider: map });
-  };
-
   const Wishes = () => {
     if (el.Wishes.length > 0) {
       let res = "";
       el.Wishes.forEach((element) => {
         res += `${element["Name"].slice(0, 1)} `;
       });
-      return res;
+      return (
+        <Text style={styles.text}>
+          Пожелания:{"  "}
+          <Text style={{ color: "orange", fontWeight: "700" }}>{res}</Text>
+        </Text>
+      );
     } else {
-      return "—";
+      return <></>;
     }
   };
 
-  useEffect(() => {
+  const ClientComment = () => {
     if (el.ClientComment) {
-      setClientComment(el.ClientComment);
+      return el.ClientComment;
     } else {
-      setClientComment("");
+      return "";
     }
-  }, []);
+  };
+
+  const handlePostOrder = () => {
+    PostOrder({
+      Status: 7,
+      OrderID: counter,
+      CancelReasonID: 1,
+      Comment: "",
+      WishingDate: null,
+    })
+      .then((result) => {
+        if (result.status == 200) {
+          onRefresh();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -68,22 +84,35 @@ export const Post = ({ el }) => {
         >
           <Text style={styles.title}>Заказ #{el.DeliveryNumber}</Text>
         </TouchableOpacity>
-        <Text style={colorStatus()}>{`${orderStatus[
-          el.Status - 1
-        ].toUpperCase()}`}</Text>
+        <Text
+          style={[color, { fontSize: 16, fontWeight: "bold" }]}
+        >{`${orderStatus[el.Status - 1].toUpperCase()}`}</Text>
       </View>
       <View>
-        <TouchableOpacity
-          onPress={() => goToYosemite(el.Latitude, el.Longitude, "yandex")}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 5,
+          }}
         >
-          <Text style={styles.text}>{el.Address}</Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>
-          Пожелания:{" "}
-          <Text style={{ color: "orange", fontWeight: "700" }}>
-            <Wishes />
-          </Text>
-        </Text>
+          <TouchableOpacity
+            style={{ width: 300 }}
+            onPress={() => Clipboard.setString(el.Address)}
+          >
+            <Text style={styles.text}>{el.Address}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => showLocation(options)}>
+            <Ionicons
+              name="navigate-circle-outline"
+              size={32}
+              color="#FAEBD7"
+            />
+          </TouchableOpacity>
+        </View>
+
+        <Wishes />
+
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.text}>Клинет: {el.ClientName} </Text>
           <TouchableOpacity
@@ -116,19 +145,42 @@ export const Post = ({ el }) => {
         }}
       >
         <TouchableOpacity onPress={() => handelePurchase(el.OrderId)}>
-          <Text style={styles.button}>Состав</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          disabled={clientComment.length > 0 ? false : true}
-          onPress={() => setShowWishes(!showWishes)}
-        >
           <Text style={styles.button}>
-            {clientComment.length > 0 ? "Коммент" : "—"}
+            <Ionicons name="list-outline" size={24} color="white" />
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowContent(!showContent)}>
-          <Text style={styles.button}>QR-Код</Text>
+        <TouchableOpacity
+          disabled={ClientComment().length > 0 ? false : true}
+          onPress={() => setShowWishes(!showWishes)}
+        >
+          {ClientComment().length > 0 ? (
+            <Text style={styles.button}>
+              <Ionicons
+                name="chatbox-ellipses-outline"
+                size={24}
+                color="white"
+              />
+            </Text>
+          ) : (
+            <></>
+          )}
         </TouchableOpacity>
+        {el.Status === 6 ? (
+          <TouchableOpacity
+            disabled={el.Status === 6 ? false : true}
+            onPress={handlePostOrder}
+          >
+            <Text style={styles.button}>
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={22}
+                color="white"
+              />
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
       </View>
       {showWishes && (
         <View
@@ -149,37 +201,13 @@ export const Post = ({ el }) => {
               textAlignVertical: "center",
             }}
           >
-            {clientComment}
+            <ClientComment />
           </Text>
-        </View>
-      )}
-      {showContent && (
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            borderWidth: 6,
-            height: 280,
-            width: 280,
-            borderColor: "white",
-            backgroundColor: "white",
-          }}
-        >
-          <QRCode
-            value={`${el.ClientGUID}.${el.OrderId}`}
-            size={256}
-            viewBox={`0 0 256 256`}
-            style={{
-              height: "auto",
-              maxWidth: "100%",
-              width: "100%",
-            }}
-          />
         </View>
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -211,11 +239,11 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
   },
   button: {
-    width: 100,
-    height: 30,
+    width: 80,
+    height: 40,
     color: "#FAEBD7",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 20,
     padding: 5,
     backgroundColor: "green",
     textAlign: "center",

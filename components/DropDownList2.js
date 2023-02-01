@@ -1,38 +1,51 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import AppContext from "../contexts/AppContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function DropDownList() {
+export default function DropDownList2() {
   const myTheme = require("../themes/dark/index");
   DropDownPicker.addTheme("MyThemeName", myTheme);
   DropDownPicker.setTheme("MyThemeName");
 
   const [open, setOpen] = useState(false);
-  const { value, setValue } = useContext(AppContext);
+  const { value2, setValue2 } = useContext(AppContext);
   const [items, setItems] = useState([
-    { label: "Все заказы", value: null },
-    { label: "Потвержден", value: 5 },
-    { label: "На доставке", value: 6 },
-    { label: "Получен", value: 7 },
-    { label: "Новый", value: 12 },
+    { label: "Яндекс карты", value: "yandex-maps" },
+    { label: "2ГИС", value: "dgis" },
+    { label: "Google карты", value: "google-maps" },
   ]);
+
+  async function data() {
+    const data = await AsyncStorage.getItem("Provider", setValue2(value2));
+    if (data !== null) {
+      setValue2(data);
+    }
+  }
+
+  useEffect(() => {
+    data();
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem("Provider", value2);
+    console.log(`${value2}  setitem`);
+  }, [value2]);
+
   return (
     <DropDownPicker
       style={{
-        //zIndex: 0,
         color: "#FAEBD7",
-        //width: 165,
-        //marginLeft: 10,
+        //width: 155,
         //marginRight: 10,
+        //marginLeft: 10,
         marginTop: 5,
         borderWidth: 1,
         backgroundColor: "#182533",
-        //justifyContent: "center",
-        // alignSelf: "flex-start",
         borderColor: "#17312b",
       }}
       dropDownContainerStyle={{
-        width: "90%",
+        width: "100%",
         color: "#FAEBD7",
         borderWidth: 1,
         borderRadius: 10,
@@ -40,12 +53,12 @@ export default function DropDownList() {
         borderColor: "#17312b",
       }}
       theme="MyThemeName"
-      placeholder="Все заказы"
+      placeholder={value2}
       open={open}
-      value={value}
+      value={value2}
       items={items}
       setOpen={setOpen}
-      setValue={setValue}
+      setValue={setValue2}
       setItems={setItems}
     />
   );
