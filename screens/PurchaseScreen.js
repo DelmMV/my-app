@@ -105,6 +105,10 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
             />
           </View>
           <Text style={styles.infotext}>Оплата: {order.PaymentType}</Text>
+          <Text style={styles.infotext}>Телефон: +{order.ClientPhone}</Text>
+          <Text style={[styles.infotext, { width: "95%" }]}>
+            Адрес: {order.Address}
+          </Text>
           <Text style={styles.infotext}>
             Желаемое время получения: {GetUserTime(new Date(order.WishingDate))}
           </Text>
@@ -122,13 +126,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
           ) : (
             <View></View>
           )}
-          {order.DateLink ? (
-            <Text style={styles.infotext}>
-              Время сборки заказа: {GetUserTime(new Date(order.DateLink))}
-            </Text>
-          ) : (
-            <View></View>
-          )}
+
           {order.DateReceipt ? (
             <Text style={styles.infotext}>
               Время вручения заказа: {GetUserTime(new Date(order.DateReceipt))}

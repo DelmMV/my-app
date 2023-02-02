@@ -35,10 +35,8 @@ export default function DropDownList2() {
   return (
     <DropDownPicker
       style={{
+        zIndex: 0,
         color: "#FAEBD7",
-        //width: 155,
-        //marginRight: 10,
-        //marginLeft: 10,
         marginTop: 5,
         borderWidth: 1,
         backgroundColor: "#182533",

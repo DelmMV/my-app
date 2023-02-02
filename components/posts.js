@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, memo } from "react";
 import AppContext from "../contexts/AppContext";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { days, orderStatus } from "../utils/constans.js";
@@ -14,7 +14,7 @@ import { ColorStatus } from "./ColorStatus";
 import { PostOrder } from "../api/PostOrder";
 import { useFetchPosts } from "../hooks";
 
-export function Post({ el }) {
+export const Post = memo(function Post({ el }) {
   const color = ColorStatus(el);
   const { value2, counter } = useContext(AppContext);
   const options = {
@@ -115,7 +115,11 @@ export function Post({ el }) {
         <Wishes />
 
         <View style={{ flexDirection: "row" }}>
-          <Text style={styles.text}>Клинет: {el.ClientName} </Text>
+          {el.ClientName ? (
+            <Text style={styles.text}>Клинет: {el.ClientName} </Text>
+          ) : (
+            <></>
+          )}
           <TouchableOpacity
             onPress={() => Linking.openURL(`tel: +${el.ClientPhone}`)}
           >
@@ -208,7 +212,7 @@ export function Post({ el }) {
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

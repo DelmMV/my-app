@@ -19,6 +19,7 @@ export default function DropDownList() {
   return (
     <DropDownPicker
       style={{
+        zIndex: 0,
         color: "#FAEBD7",
         marginTop: 5,
         borderWidth: 1,

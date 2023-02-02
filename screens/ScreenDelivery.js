@@ -19,6 +19,7 @@ import DropDownList2 from "../components/DropDownList2";
 import AppContext from "../contexts/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FilterItem } from "../components/FilterItem";
+import { FlashList } from "@shopify/flash-list";
 
 const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
   const [point, setPoint] = useState("");
@@ -111,11 +112,14 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       {isLoading ? (
         <ActivityIndicator size="small" />
       ) : (
-        <FlatList
+        <FlashList
+          estimatedItemSize={216}
+          maxToRenderPerBatch={3}
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}
           data={filter}
+          keyExtractor={(item) => item.OrderId}
           renderItem={({ item }) => <Post el={item} />}
         />
       )}
