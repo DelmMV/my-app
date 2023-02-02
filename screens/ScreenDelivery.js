@@ -97,6 +97,7 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
           flexDirection: "row",
           alignSelf: "center",
           width: "95%",
+          //zIndex: 0,
         }}
       >
         <View style={{ width: "50%", paddingRight: 5 }}>
@@ -106,8 +107,9 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
           <DropDownList2 />
         </View>
       </View>
+
       {isLoading ? (
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="small" />
       ) : (
         <FlatList
           onRefresh={onRefresh}

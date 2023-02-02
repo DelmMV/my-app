@@ -4,7 +4,7 @@ import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 import { cacheImage } from "../utils/cacheImage";
 import Checkbox from "expo-checkbox";
 
-const Purchase = memo(function Purchase({ el }) {
+function Purchase({ el }) {
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
@@ -19,7 +19,6 @@ const Purchase = memo(function Purchase({ el }) {
     }
     return <Text>{products2}</Text>;
   };
-  const uri = `${pictureId.baseURL}${pictureId.url}`;
   const QuantityMarket = () => {
     if (el.Quantity > 1) {
       return (
@@ -54,16 +53,20 @@ const Purchase = memo(function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        <Image
-          source={{ uri: uri }}
-          style={{
-            width: 45,
-            height: 45,
-            borderRadius: 10,
-            right: 10,
-            top: 5,
-          }}
-        />
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Image
+            source={{ uri: `${pictureId.baseURL}${pictureId.url}` }}
+            style={{
+              width: 45,
+              height: 45,
+              borderRadius: 10,
+              right: 10,
+              top: 5,
+            }}
+          />
+        )}
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.text}>{el.ProductName}</Text>
           <Text style={styles.subText}>{el.CatalogName}</Text>
@@ -86,7 +89,7 @@ const Purchase = memo(function Purchase({ el }) {
       </View>
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {

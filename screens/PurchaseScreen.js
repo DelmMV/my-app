@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, memo } from "react";
 import {
   Text,
   StyleSheet,
@@ -8,8 +8,9 @@ import {
   SafeAreaView,
   View,
   Platform,
+  ScrollView,
 } from "react-native";
-import { ScrollView } from "react-native-virtualized-view";
+//import { ScrollView } from "react-native-virtualized-view";
 import { useFetchPurchase } from "../hooks";
 import { StatusBar } from "expo-status-bar";
 import Purchase from "../components/Purchase";
@@ -22,7 +23,7 @@ import QRCode from "react-qr-code";
 import GetUserTime from "../components/GetUserTime";
 import { WishesOrder } from "../components/WishesOrder";
 
-export default function PurchaseScreen({ navigation }) {
+const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   const [order, setOrder] = useState(0);
   const { counter, item } = useContext(AppContext);
   const { isLoading, purchase, onRefresh, isRefreshing } =
@@ -34,10 +35,9 @@ export default function PurchaseScreen({ navigation }) {
         setOrder(element);
       }
     });
-  }, []);
+  }, [item]);
 
   const wishesOrder = WishesOrder(order);
-  console.log("render");
 
   const handleLog = async () => {
     const data = AsyncStorage.setItem("Log", `${order.OrderId}`);
@@ -61,60 +61,28 @@ export default function PurchaseScreen({ navigation }) {
         console.error(err);
       });
   };
-  return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => navigation.pop()}>
-            <Text style={styles.button}>
-              <Ionicons name="chevron-back-outline" size={16} color="white" />
-            </Text>
-          </TouchableOpacity>
-          <View style={{ width: 200 }}>
-            <Text
-              style={[
-                color,
-                {
-                  paddingTop: 55,
-                  textShadowColor: "black",
-                  textShadowRadius: 5,
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  marginBottom: 2,
-                },
-              ]}
-            >
-              #{order.DeliveryNumber}
-            </Text>
-          </View>
+  const Header = () => {
+    return (
+      <>
+        <View>{wishesOrder}</View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.title}>Товары</Text>
+          <Text style={[styles.title, { marginRight: 40 }]}>
+            {order.QuantityPurchases}
+          </Text>
         </View>
-      </View>
-      <ScrollView>
-        <View>
-          <View>{wishesOrder}</View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={styles.title}>Товары</Text>
-            <Text style={[styles.title, { marginRight: 40 }]}>
-              {order.QuantityPurchases}
-            </Text>
-          </View>
-          {isLoading ? (
-            <ActivityIndicator size="large" />
-          ) : (
-            <FlatList
-              scrollEnabled={false}
-              estimatedItemSize={72}
-              data={purchase}
-              onRefresh={onRefresh}
-              refreshing={isRefreshing}
-              renderItem={({ item }) => <Purchase el={item} />}
-            />
-          )}
-        </View>
-        <View>
+      </>
+    );
+  };
+  const Footer = () => {
+    return (
+      <>
+        <View style={{ marginBottom: 5, flex: 1 }}>
           <Text style={styles.title}>Информация о заказе</Text>
           <View
             style={{
@@ -170,35 +138,80 @@ export default function PurchaseScreen({ navigation }) {
           )}
           <Text style={styles.infotext}>Сумма заказа: {order.Price}₽</Text>
         </View>
-      </ScrollView>
+      </>
+    );
+  };
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity onPress={() => navigation.pop()}>
+            <Text style={styles.button}>
+              <Ionicons name="chevron-back-outline" size={16} color="white" />
+            </Text>
+          </TouchableOpacity>
+          <View style={{ width: 200 }}>
+            <Text
+              style={[
+                color,
+                {
+                  paddingTop: 55,
+                  textShadowColor: "black",
+                  textShadowRadius: 5,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginBottom: 2,
+                },
+              ]}
+            >
+              #{order.DeliveryNumber}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={{ flex: 1 }}>
+        {isLoading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <FlatList
+            ListHeaderComponent={<Header />}
+            data={purchase}
+            onRefresh={onRefresh}
+            refreshing={isRefreshing}
+            renderItem={({ item }) => <Purchase el={item} />}
+            ListFooterComponent={<Footer />}
+          />
+        )}
+      </View>
 
       {/* <Button onPress={handleLog} title="Тест логирования" color="green" /> */}
       {order.Status === 6 ? (
-        <Text
-          style={{
-            width: "50%",
-            height: 40,
-            color: "white",
-            borderRadius: 5,
-            backgroundColor: "green",
-            textAlign: "center",
-            textAlignVertical: "center",
-            // marginTop: 45,
-            // marginBottom: 10,
-            // marginLeft: 10,
-            alignSelf: "center",
-          }}
-          disabled={order.Status === 6 ? false : true}
-          onPress={handlePostOrder}
-        >
-          <Ionicons name="checkmark-circle-outline" size={32} color="white" />
-        </Text>
+        <View>
+          <Text
+            style={{
+              width: "50%",
+              height: 40,
+              color: "white",
+              borderRadius: 5,
+              backgroundColor: "green",
+              textAlign: "center",
+              textAlignVertical: "center",
+              alignSelf: "center",
+            }}
+            disabled={order.Status === 6 ? false : true}
+            onPress={handlePostOrder}
+          >
+            <Ionicons name="checkmark-circle-outline" size={32} color="white" />
+          </Text>
+        </View>
       ) : (
         <View></View>
       )}
     </SafeAreaView>
   );
-}
+});
 const styles = StyleSheet.create({
   container: {
     height: "100%",
@@ -239,3 +252,5 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 });
+
+export default PurchaseScreen;

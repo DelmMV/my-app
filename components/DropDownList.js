@@ -19,16 +19,10 @@ export default function DropDownList() {
   return (
     <DropDownPicker
       style={{
-        //zIndex: 0,
         color: "#FAEBD7",
-        //width: 165,
-        //marginLeft: 10,
-        //marginRight: 10,
         marginTop: 5,
         borderWidth: 1,
         backgroundColor: "#182533",
-        //justifyContent: "center",
-        // alignSelf: "flex-start",
         borderColor: "#17312b",
       }}
       dropDownContainerStyle={{

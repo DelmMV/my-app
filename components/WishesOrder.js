@@ -54,20 +54,6 @@ export function WishesOrder(order) {
       <WishAndComment />
     </>
   );
-
-  // return (
-  //   <>
-  //     {wish || comment !== false ? (
-  //       <View>
-  //         <Text style={styles.title}>Пожелания к заказу</Text>
-  //         <Text style={styles.infotext}>{wish}</Text>
-  //         <Text style={styles.infotext}>{comment}</Text>
-  //       </View>
-  //     ) : (
-  //       <></>
-  //     )}
-  //   </>
-  // );
 }
 
 const styles = StyleSheet.create({
