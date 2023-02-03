@@ -27,7 +27,6 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
   const ref = useRef(null);
   const filter = FilterItem(value, posts);
-
   const myPoint = async () => {
     try {
       const point = await AsyncStorage.getItem("Point");
@@ -36,9 +35,17 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       console.log(err);
     }
   };
-
   useEffect(() => {
     myPoint();
+  }, []);
+
+  useEffect(() => {
+    setInterval(onRefresh, 0.5 * 60 * 1000);
+    return () => {
+      if (ref.current) {
+        clearInterval(ref.current);
+      }
+    };
   }, []);
 
   const removeValue = async () => {
@@ -62,6 +69,10 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
     });
     return result;
   }
+
+  const renderItem = (item) => {
+    return <Post el={item} />;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -113,8 +124,8 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
         <ActivityIndicator size="small" />
       ) : (
         <FlashList
+          extraData={filter}
           estimatedItemSize={216}
-          maxToRenderPerBatch={3}
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}

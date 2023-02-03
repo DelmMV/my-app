@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, memo } from "react";
+import React, { useState, useContext, memo } from "react";
 import AppContext from "../contexts/AppContext";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { days, orderStatus } from "../utils/constans.js";
@@ -24,7 +24,6 @@ export const Post = memo(function Post({ el }) {
     directionsMode: "car",
   };
   const { setCounter } = useContext(AppContext);
-  const [showContent, setShowContent] = useState(false);
   const [showWishes, setShowWishes] = useState(false);
   const navigation = useNavigation();
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
