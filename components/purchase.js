@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import React from "react";
+import React, { memo } from "react";
+import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
-import { Image } from "react-native-expo-image-cache";
 import { cacheImage } from "../utils/cacheImage";
+import Checkbox from "expo-checkbox";
 
-export default function Purchase({ el }) {
+function Purchase({ el }) {
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
@@ -19,10 +19,31 @@ export default function Purchase({ el }) {
     }
     return <Text>{products2}</Text>;
   };
+  const QuantityMarket = () => {
+    if (el.Quantity > 1) {
+      return (
+        <Text
+          style={[
+            styles.quantity,
+            {
+              color: "white",
+              backgroundColor: "green",
+              borderWidth: 1,
+              borderRadius: 20,
+              width: 40,
+              height: 40,
+              textAlignVertical: "center",
+              textAlign: "center",
+            },
+          ]}
+        >
+          {el.Quantity}шт.
+        </Text>
+      );
+    }
+    return <Text style={[styles.quantity]}>{el.Quantity}шт.</Text>;
+  };
 
-  const preview = { uri: `${pictureId.baseURL}${pictureId.url}` };
-  //const preview = require("../assets/splash.png");
-  const uri = `${pictureId.baseURL}${pictureId.url}`;
   return (
     <View style={styles.container}>
       <View
@@ -32,23 +53,20 @@ export default function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        {/* {isLoading ? (
-          <ActivityIndicator size="large" />
-        ) : ( */}
-        <Image
-          {...{ uri, preview }}
-          transitionDuration={100}
-          tint="dark"
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10,
-            right: 10,
-            top: 5,
-          }}
-        />
-        {/* )} */}
-
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Image
+            source={{ uri: `${pictureId.baseURL}${pictureId.url}` }}
+            style={{
+              width: 45,
+              height: 45,
+              borderRadius: 10,
+              right: 10,
+              top: 5,
+            }}
+          />
+        )}
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.text}>{el.ProductName}</Text>
           <Text style={styles.subText}>{el.CatalogName}</Text>
@@ -67,7 +85,7 @@ export default function Purchase({ el }) {
       </View>
 
       <View>
-        <Text style={styles.quantity}>{el.Quantity}шт.</Text>
+        <QuantityMarket />
       </View>
     </View>
   );
@@ -78,7 +96,6 @@ const styles = StyleSheet.create({
     width: "80%",
     flexDirection: "row",
     justifyContent: "flex-start",
-    //justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "center",
     paddingRight: 15,
@@ -102,3 +119,5 @@ const styles = StyleSheet.create({
     color: "#FAEBD7",
   },
 });
+
+export default Purchase;

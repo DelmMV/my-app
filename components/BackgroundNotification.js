@@ -4,6 +4,7 @@ import * as TaskManager from "expo-task-manager";
 import { featchPost } from "../api/index";
 import * as Notification from "expo-notifications";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 let oldOrder = [];
 
@@ -103,15 +104,12 @@ export default function BackgroundNotification() {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.textContainer}></View>
-      <View style={styles.textContainer}></View>
       <TouchableOpacity onPress={toggleFetchTask}>
-        <Text style={styles.button}>
-          {isRegistered
-            ? `Выключить уведомления `
-            : `Включить уведомления 
-            `}
-        </Text>
+        {isRegistered ? (
+          <Ionicons name="volume-high-outline" size={32} color="#FAEBD7" />
+        ) : (
+          <Ionicons name="volume-mute-outline" size={32} color="red" />
+        )}
       </TouchableOpacity>
     </View>
   );

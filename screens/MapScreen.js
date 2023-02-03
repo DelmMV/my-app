@@ -3,27 +3,41 @@ import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import AppContext from "../contexts/AppContext";
 import GetUserTime from "../components/GetUserTime";
-import openMap from "react-native-open-maps";
 import { StatusBar } from "expo-status-bar";
 import DropDownList from "../components/DropDownList";
+import DropDownList2 from "../components/DropDownList2";
+import { showLocation } from "react-native-map-link";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { memo } from "react";
+import { FilterItem } from "../components/FilterItem";
 
-export default function MapScreen({ navigation }) {
+const MapScreen = memo(function MapScreen({ navigation }) {
   const { value, item } = useContext(AppContext);
-  function filterItem() {
-    if (value === null) {
-      return item;
-    } else {
-      return [...item.filter((e) => e.Status === value)];
-    }
-  }
+  const { value2 } = useContext(AppContext);
+
+  const filter = FilterItem(value, item);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <TouchableOpacity onPress={() => navigation.pop()}>
-        <Text style={styles.button}> {`< Назад`}</Text>
+        <Text style={styles.button}>
+          <Ionicons name="return-up-back-outline" size={34} color="white" />
+        </Text>
       </TouchableOpacity>
-      <DropDownList />
-
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: "center",
+          width: "95%",
+        }}
+      >
+        <View style={{ width: "50%", paddingRight: 5 }}>
+          <DropDownList />
+        </View>
+        <View style={{ width: "50%" }}>
+          <DropDownList2 />
+        </View>
+      </View>
       <MapView
         style={styles.map}
         mapType="standard"
@@ -36,10 +50,13 @@ export default function MapScreen({ navigation }) {
           longitudeDelta: 0.4,
         }}
       >
-        {filterItem().length > 0 &&
-          filterItem().map((element) => {
-            const goToYosemite = (x, y, map) => {
-              openMap({ latitude: x, longitude: y, provider: map });
+        {filter.length > 0 &&
+          filter.map((element) => {
+            const options = {
+              latitude: element.Latitude,
+              longitude: element.Longitude,
+              app: value2,
+              directionsMode: "car",
             };
             const colorStatus = () => {
               if (element.Status === 7) {
@@ -54,9 +71,7 @@ export default function MapScreen({ navigation }) {
             };
             return (
               <Marker
-                onPress={() =>
-                  goToYosemite(element.Latitude, element.Longitude, "yandex")
-                }
+                onPress={() => showLocation(options)}
                 key={element.DeliveryNumber}
                 coordinate={{
                   latitude: element.Latitude,
@@ -86,7 +101,7 @@ export default function MapScreen({ navigation }) {
       </MapView>
     </View>
   );
-}
+});
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -97,7 +112,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   button: {
-    height: 35,
+    height: 40,
     color: "white",
     borderRadius: 5,
     backgroundColor: "green",
@@ -110,3 +125,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+export default MapScreen;

@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, memo, useRef } from "react";
 import {
   StyleSheet,
   Text,
   SafeAreaView,
   Platform,
   ActivityIndicator,
-  FlatList,
   TouchableOpacity,
   View,
+  FlatList,
 } from "react-native";
 import { useFetchPosts } from "../hooks/index";
 import { Post, Empty } from "../components/index";
@@ -15,13 +15,18 @@ import { StatusBar } from "expo-status-bar";
 import Navigation from "../components/Navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownList from "../components/DropDownList";
+import DropDownList2 from "../components/DropDownList2";
 import AppContext from "../contexts/AppContext";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { FilterItem } from "../components/FilterItem";
+import { FlashList } from "@shopify/flash-list";
 
-export default function ScreenDelivery({ navigation }) {
+const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
   const [point, setPoint] = useState("");
   const { value } = useContext(AppContext);
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
-
+  const ref = useRef(null);
+  const filter = FilterItem(value, posts);
   const myPoint = async () => {
     try {
       const point = await AsyncStorage.getItem("Point");
@@ -30,9 +35,17 @@ export default function ScreenDelivery({ navigation }) {
       console.log(err);
     }
   };
-
   useEffect(() => {
     myPoint();
+  }, []);
+
+  useEffect(() => {
+    setInterval(onRefresh, 0.5 * 60 * 1000);
+    return () => {
+      if (ref.current) {
+        clearInterval(ref.current);
+      }
+    };
   }, []);
 
   const removeValue = async () => {
@@ -46,21 +59,15 @@ export default function ScreenDelivery({ navigation }) {
   const handleMap = () => {
     navigation.push("MapScreen");
   };
+  const handleStatistics = () => {
+    navigation.push("StatisticsSreen");
+  };
   function profit() {
     let result = 0;
     posts.forEach((element) => {
       result = result + element.Price;
     });
     return result;
-  }
-
-  function filterPost(post) {
-    let filterResult = value;
-    if (filterResult === null) {
-      return post;
-    } else {
-      return [...post.filter((e) => e.Status === value)];
-    }
   }
 
   return (
@@ -75,25 +82,51 @@ export default function ScreenDelivery({ navigation }) {
           marginRight: 11,
         }}
       >
-        <Navigation />
-        <TouchableOpacity onPress={handleMap}>
-          <Text style={styles.map}>Карта</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <Navigation />
+          <TouchableOpacity onPress={handleStatistics} style={{ margin: 10 }}>
+            <Ionicons name="podium-outline" size={32} color="#FAEBD7" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleMap}
+            style={{ marginLeft: 30, marginTop: 10, marginBottom: 10 }}
+          >
+            <Ionicons name="map-outline" size={32} color="#FAEBD7" />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity onPress={removeValue}>
-          <Text style={styles.button}>Выход</Text>
+          <Ionicons name="log-out-outline" size={32} color="red" />
         </TouchableOpacity>
       </View>
 
       <StatusBar style="light" backgroundColor="#17212b" />
-      <DropDownList />
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: "center",
+          width: "95%",
+          //zIndex: 0,
+        }}
+      >
+        <View style={{ width: "50%", paddingRight: 5 }}>
+          <DropDownList />
+        </View>
+        <View style={{ width: "50%" }}>
+          <DropDownList2 />
+        </View>
+      </View>
+
       {isLoading ? (
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="small" />
       ) : (
-        <FlatList
+        <FlashList
+          extraData={filter}
+          estimatedItemSize={216}
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}
-          data={filterPost(posts)}
+          data={filter}
+          keyExtractor={(item) => item.OrderId}
           renderItem={({ item }) => <Post el={item} />}
         />
       )}
@@ -102,11 +135,11 @@ export default function ScreenDelivery({ navigation }) {
       </Text>
     </SafeAreaView>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: "100%",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     justifyContent: "center",
     backgroundColor: "#17212b",
@@ -149,3 +182,5 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
   },
 });
+
+export default ScreenDelivery;

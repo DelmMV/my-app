@@ -4,7 +4,7 @@ import BackgroundNotification from "../components/BackgroundNotification";
 
 function Navigation({ navigation }) {
   return (
-    <View>
+    <View style={{ margin: 10 }}>
       <BackgroundNotification />
     </View>
   );
