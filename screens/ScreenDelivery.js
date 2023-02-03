@@ -70,10 +70,6 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
     return result;
   }
 
-  const renderItem = (item) => {
-    return <Post el={item} />;
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View
