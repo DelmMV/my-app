@@ -2,6 +2,7 @@ import ApiManager from "./ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function fetchPurchase(id) {
+  console.log("purchase");
   const dataToken = await AsyncStorage.getItem("AccessToken");
   try {
     const response = await ApiManager(`delivery/purchases?OrderID=${id}`, {

@@ -1,4 +1,5 @@
 import { Text, View, StyleSheet } from "react-native";
+import { Seporator } from "./Seporator";
 
 export function WishesOrder(order) {
   const ClientsComment = (order) => {
@@ -26,6 +27,7 @@ export function WishesOrder(order) {
       return (
         <View>
           <Text style={styles.title}>Пожелания к заказу</Text>
+          <Seporator />
           <Text style={styles.infotext}>{wish}</Text>
           <Text style={styles.infotext}>{comment}</Text>
         </View>
@@ -34,6 +36,7 @@ export function WishesOrder(order) {
       return (
         <View>
           <Text style={styles.title}>Пожелания к заказу</Text>
+          <Seporator />
           <Text style={styles.infotext}>{wish}</Text>
         </View>
       );
@@ -41,6 +44,7 @@ export function WishesOrder(order) {
       return (
         <View>
           <Text style={styles.title}>Пожелания к заказу</Text>
+          <Seporator />
           <Text style={styles.infotext}>{comment}</Text>
         </View>
       );

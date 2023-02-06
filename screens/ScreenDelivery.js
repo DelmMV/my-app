@@ -119,9 +119,8 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       {isLoading ? (
         <ActivityIndicator size="small" />
       ) : (
-        <FlashList
+        <FlatList
           extraData={filter}
-          estimatedItemSize={216}
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}

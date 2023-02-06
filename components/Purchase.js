@@ -26,12 +26,14 @@ function Purchase({ el }) {
           style={[
             styles.quantity,
             {
-              color: "white",
-              backgroundColor: "green",
-              borderWidth: 1,
-              borderRadius: 20,
-              width: 40,
-              height: 40,
+              color: "red",
+              borderBottomWidth: 2,
+              borderBottomColor: "red",
+              //backgroundColor: "green",
+              // borderWidth: 1,
+              // borderRadius: 20,
+              // width: 35,
+              // height: 35,
               textAlignVertical: "center",
               textAlign: "center",
             },
@@ -62,8 +64,9 @@ function Purchase({ el }) {
               width: 45,
               height: 45,
               borderRadius: 10,
-              right: 10,
-              top: 5,
+              margin: 5,
+              // right: 10,
+              // top: 5,
             }}
           />
         )}
@@ -93,9 +96,9 @@ function Purchase({ el }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "95%",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
     paddingRight: 15,
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FAEBD7",
     textAlign: "left",
-    width: 200,
+    width: 235,
     fontSize: 16,
   },
   subText: { fontSize: 12, color: "#A9A9A9" },

@@ -7,7 +7,6 @@ export const useFetchPosts = function useFetchPosts() {
   const [isLoading, setLoading] = useState(true);
   const [isRefreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState([]);
-  const ref = useRef(null);
 
   useEffect(() => {
     featchPost().then((newPosts) => {
@@ -22,7 +21,6 @@ export const useFetchPosts = function useFetchPosts() {
     const newPosts = await featchPost();
     setItem(newPosts);
     setPosts(newPosts);
-
     setRefreshing(false);
   }
 

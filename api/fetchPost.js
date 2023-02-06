@@ -2,6 +2,7 @@ import ApiManager from "./ApiManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function featchPost() {
+  console.log("post");
   const dataToken = await AsyncStorage.getItem("AccessToken");
   try {
     const response = await ApiManager("/delivery/orders?LastUpdateTicks=0", {

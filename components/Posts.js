@@ -60,14 +60,14 @@ export const Post = memo(function Post({ el }) {
   const handlePostOrder = () => {
     PostOrder({
       Status: 7,
-      OrderID: counter,
+      OrderID: el.OrderId,
       CancelReasonID: 1,
       Comment: "",
       WishingDate: null,
     })
       .then((result) => {
         if (result.status == 200) {
-          onRefresh();
+          navigation.push("ScreenDelivery");
         }
       })
       .catch((err) => {
@@ -98,7 +98,7 @@ export const Post = memo(function Post({ el }) {
         >
           <TouchableOpacity
             style={{ width: 300 }}
-            onPress={() => Clipboard.setString(el.Address)}
+            onPress={() => showLocation(options)}
           >
             <Text style={styles.text}>{el.Address}</Text>
           </TouchableOpacity>

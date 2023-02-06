@@ -8,9 +8,10 @@ import {
   SafeAreaView,
   View,
   Platform,
-  ScrollView,
 } from "react-native";
-//import { ScrollView } from "react-native-virtualized-view";
+import MapView, { Marker } from "react-native-maps";
+import { showLocation } from "react-native-map-link";
+import { Seporator } from "../components";
 import { useFetchPurchase } from "../hooks";
 import { StatusBar } from "expo-status-bar";
 import Purchase from "../components/Purchase";
@@ -25,7 +26,7 @@ import { WishesOrder } from "../components/WishesOrder";
 
 const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   const [order, setOrder] = useState(0);
-  const { counter, item } = useContext(AppContext);
+  const { counter, item, value2 } = useContext(AppContext);
   const { isLoading, purchase, onRefresh, isRefreshing } =
     useFetchPurchase(counter);
   const color = ColorStatus(order);
@@ -38,6 +39,12 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   }, [item]);
 
   const wishesOrder = WishesOrder(order);
+  const options = {
+    latitude: order.Latitude,
+    longitude: order.Longitude,
+    app: value2,
+    directionsMode: "car",
+  };
 
   const handleLog = async () => {
     const data = AsyncStorage.setItem("Log", `${order.OrderId}`);
@@ -64,6 +71,27 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   const Header = () => {
     return (
       <>
+        <MapView
+          style={{
+            height: 150,
+          }}
+          mapType="standard"
+          userLocationPriority="passive"
+          initialRegion={{
+            latitude: order.Latitude,
+            longitude: order.Longitude,
+            latitudeDelta: 0.0065,
+            longitudeDelta: 0.0065,
+          }}
+        >
+          <Marker
+            onPress={() => showLocation(options)}
+            coordinate={{
+              latitude: order.Latitude,
+              longitude: order.Longitude,
+            }}
+          />
+        </MapView>
         <View>{wishesOrder}</View>
         <View
           style={{
@@ -76,6 +104,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
             {order.QuantityPurchases}
           </Text>
         </View>
+        <Seporator />
       </>
     );
   };
@@ -84,6 +113,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
       <>
         <View style={{ marginBottom: 5, flex: 1 }}>
           <Text style={styles.title}>Информация о заказе</Text>
+          <Seporator />
           <View
             style={{
               marginLeft: 30,
@@ -142,7 +172,11 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
           <TouchableOpacity onPress={() => navigation.pop()}>
             <Text style={styles.button}>
               <Ionicons name="chevron-back-outline" size={16} color="white" />
@@ -230,7 +264,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textAlignVertical: "center",
     marginTop: 45,
-    marginBottom: 10,
+    marginBottom: 3,
     marginLeft: 10,
     borderRadius: 20,
     //alignSelf: "flex-start",
@@ -240,7 +274,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: 10,
-    marginBottom: 10,
+    marginBottom: 2,
   },
   infotext: {
     color: "gold",
