@@ -12,7 +12,11 @@ const Stack = createNativeStackNavigator();
 const Routers = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+      screenOptions={{
+        headerShown: false,
+        animation: "fade",
+        animationDuration: 900,
+      }}
     >
       <Stack.Screen name="SplashScreen" component={SplashScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />

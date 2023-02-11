@@ -13,8 +13,13 @@ import {
 import { StatusBar } from "expo-status-bar";
 import AppContext from "../contexts/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCountLogsStore } from "../contexts/store";
 
 export default function StatisticsSreen({ navigation }) {
+  const count = useCountLogsStore((state) => state.logs);
+  const removeCountLogs = useCountLogsStore((state) => state.removeCountLogs);
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.pop()}>
@@ -22,7 +27,14 @@ export default function StatisticsSreen({ navigation }) {
           <Ionicons name="return-up-back-outline" size={34} color="white" />
         </Text>
       </TouchableOpacity>
-      <Text style={styles.text}>stylesss</Text>
+      <Text style={[styles.text, { flex: 1 }]}>{count}</Text>
+      {/* <FlatList
+        data={log}
+        renderItem={(item) => <Text style={styles.text}>{item.name}</Text>}
+      /> */}
+      <View style={{ width: 200, alignContent: "center", alignSelf: "center" }}>
+        <Button onPress={removeCountLogs} title="Reset count" color="green" />
+      </View>
     </SafeAreaView>
   );
 }

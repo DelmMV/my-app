@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, memo, useRef } from "react";
+import React, { useContext, useEffect, useState, memo } from "react";
 import {
   StyleSheet,
   Text,
@@ -19,13 +19,14 @@ import DropDownList2 from "../components/DropDownList2";
 import AppContext from "../contexts/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FilterItem } from "../components/FilterItem";
-import { FlashList } from "@shopify/flash-list";
+import { useCountLogsStore } from "../contexts/store";
 
 const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
+  const count = useCountLogsStore((state) => state.logs);
+
   const [point, setPoint] = useState("");
   const { value } = useContext(AppContext);
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
-  const ref = useRef(null);
   const filter = FilterItem(value, posts);
   const myPoint = async () => {
     try {
@@ -37,15 +38,10 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
   };
   useEffect(() => {
     myPoint();
-  }, []);
+  }, [point]);
 
   useEffect(() => {
     setInterval(onRefresh, 0.5 * 60 * 1000);
-    return () => {
-      if (ref.current) {
-        clearInterval(ref.current);
-      }
-    };
   }, []);
 
   const removeValue = async () => {
@@ -69,15 +65,18 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
     });
     return result;
   }
-
+  console.log("screenD");
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{ paddingTop: 38, marginLeft: 11 }}>
+        <Text style={styles.topText}> {point}</Text>
+      </View>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingTop: 41,
+          paddingTop: 1,
           marginLeft: 11,
           marginRight: 11,
         }}
@@ -85,17 +84,17 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
         <View style={{ flexDirection: "row" }}>
           <Navigation />
           <TouchableOpacity onPress={handleStatistics} style={{ margin: 10 }}>
-            <Ionicons name="podium-outline" size={32} color="#FAEBD7" />
+            <Ionicons name="podium-outline" size={24} color="#FAEBD7" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleMap}
             style={{ marginLeft: 30, marginTop: 10, marginBottom: 10 }}
           >
-            <Ionicons name="map-outline" size={32} color="#FAEBD7" />
+            <Ionicons name="map-outline" size={24} color="#FAEBD7" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={removeValue}>
-          <Ionicons name="log-out-outline" size={32} color="red" />
+          <Ionicons name="log-out-outline" size={24} color="red" />
         </TouchableOpacity>
       </View>
 
@@ -130,7 +129,8 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
         />
       )}
       <Text style={styles.botText}>
-        {point} || Закзов {posts.length} || Выручка {profit()}₽
+        Доставил заказов {count} || Всего заказов {posts.length} || Выручка{" "}
+        {profit()}₽
       </Text>
     </SafeAreaView>
   );
@@ -160,6 +160,10 @@ const styles = StyleSheet.create({
   botText: {
     color: "#FAEBD7",
     alignSelf: "center",
+    fontSize: 12,
+  },
+  topText: {
+    color: "#FAEBD7",
     fontSize: 12,
   },
   button: {

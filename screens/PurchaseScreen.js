@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   View,
   Platform,
+  Button,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { showLocation } from "react-native-map-link";
@@ -23,13 +24,16 @@ import { ColorStatus } from "../components/ColorStatus";
 import QRCode from "react-qr-code";
 import GetUserTime from "../components/GetUserTime";
 import { WishesOrder } from "../components/WishesOrder";
+import { useCountLogsStore } from "../contexts/store";
 
 const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   const [order, setOrder] = useState(0);
   const { counter, item, value2 } = useContext(AppContext);
   const { isLoading, purchase, onRefresh, isRefreshing } =
     useFetchPurchase(counter);
+
   const color = ColorStatus(order);
+
   useEffect(() => {
     item.forEach((element) => {
       if (element.OrderId === counter) {
@@ -39,6 +43,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   }, [item]);
 
   const wishesOrder = WishesOrder(order);
+
   const options = {
     latitude: order.Latitude,
     longitude: order.Longitude,
@@ -46,9 +51,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
     directionsMode: "car",
   };
 
-  const handleLog = async () => {
-    const data = AsyncStorage.setItem("Log", `${order.OrderId}`);
-  };
+  const increaseCount = useCountLogsStore((state) => state.increaseCount);
 
   const handlePostOrder = () => {
     PostOrder({
@@ -61,6 +64,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
       .then((result) => {
         console.log(result);
         if (result.status == 200) {
+          increaseCount();
           navigation.replace("ScreenDelivery");
         }
       })
@@ -71,27 +75,6 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   const Header = () => {
     return (
       <>
-        <MapView
-          style={{
-            height: 150,
-          }}
-          mapType="standard"
-          userLocationPriority="passive"
-          initialRegion={{
-            latitude: order.Latitude,
-            longitude: order.Longitude,
-            latitudeDelta: 0.0065,
-            longitudeDelta: 0.0065,
-          }}
-        >
-          <Marker
-            onPress={() => showLocation(options)}
-            coordinate={{
-              latitude: order.Latitude,
-              longitude: order.Longitude,
-            }}
-          />
-        </MapView>
         <View>{wishesOrder}</View>
         <View
           style={{
@@ -135,10 +118,15 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
             />
           </View>
           <Text style={styles.infotext}>Оплата: {order.PaymentType}</Text>
+          <Text style={styles.infotext}>Сумма заказа: {order.Price}₽</Text>
+          {order.ClientName ? (
+            <Text style={styles.infotext}>Клиент: {order.ClientName}</Text>
+          ) : (
+            <></>
+          )}
+
           <Text style={styles.infotext}>Телефон: +{order.ClientPhone}</Text>
-          <Text style={[styles.infotext, { width: "95%" }]}>
-            Адрес: {order.Address}
-          </Text>
+
           <Text style={styles.infotext}>
             Желаемое время получения: {GetUserTime(new Date(order.WishingDate))}
           </Text>
@@ -164,8 +152,35 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
           ) : (
             <View></View>
           )}
-          <Text style={styles.infotext}>Сумма заказа: {order.Price}₽</Text>
+          <Text style={[styles.infotext, { width: "95%" }]}>
+            Адрес: {order.Address}
+          </Text>
         </View>
+        <MapView
+          loadingEnabled={true}
+          style={{
+            height: 150,
+            width: "95%",
+            alignSelf: "center",
+            marginBottom: 5,
+          }}
+          mapType="standard"
+          userLocationPriority="passive"
+          initialRegion={{
+            latitude: order.Latitude,
+            longitude: order.Longitude,
+            latitudeDelta: 0.0065,
+            longitudeDelta: 0.0065,
+          }}
+        >
+          <Marker
+            onPress={() => showLocation(options)}
+            coordinate={{
+              latitude: order.Latitude,
+              longitude: order.Longitude,
+            }}
+          />
+        </MapView>
       </>
     );
   };
@@ -218,7 +233,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
         )}
       </View>
 
-      {/* <Button onPress={handleLog} title="Тест логирования" color="green" /> */}
+      {/* <Button onPress={increaseCount} title="1" color="green" /> */}
       {order.Status === 6 ? (
         <View>
           <Text
@@ -267,7 +282,6 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     marginLeft: 10,
     borderRadius: 20,
-    //alignSelf: "flex-start",
   },
   title: {
     color: "white",

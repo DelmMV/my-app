@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, memo } from "react";
 import { featchPost } from "../api/index";
 import AppContext from "../contexts/AppContext";
 

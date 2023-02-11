@@ -1,13 +1,14 @@
-import React, { memo } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
+import React, { memo, useEffect, useState } from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
+import { Image } from "react-native-expo-image-cache";
 import { cacheImage } from "../utils/cacheImage";
-import Checkbox from "expo-checkbox";
 
-function Purchase({ el }) {
+export default Purchase = memo(function Purchase({ el }) {
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
+  const uri = `${pictureId.baseURL}${pictureId.url}`;
 
   const products = el.Products;
   const ProductsSerch = () => {
@@ -29,11 +30,6 @@ function Purchase({ el }) {
               color: "red",
               borderBottomWidth: 2,
               borderBottomColor: "red",
-              //backgroundColor: "green",
-              // borderWidth: 1,
-              // borderRadius: 20,
-              // width: 35,
-              // height: 35,
               textAlignVertical: "center",
               textAlign: "center",
             },
@@ -55,21 +51,30 @@ function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        {isLoading ? (
-          <ActivityIndicator />
+        {/* {isLoading ? (
+          ActivityIndicator
         ) : (
           <Image
-            source={{ uri: `${pictureId.baseURL}${pictureId.url}` }}
+            defaultSource={{ uri: uri, cache: "force-cache" }}
             style={{
               width: 45,
               height: 45,
               borderRadius: 10,
               margin: 5,
-              // right: 10,
-              // top: 5,
             }}
           />
-        )}
+        )} */}
+        <Image
+          defaultSource={{ uri: uri, cache: "force-cache" }}
+          tint="dark"
+          style={{
+            width: 45,
+            height: 45,
+            borderRadius: 10,
+            margin: 5,
+          }}
+        />
+
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.text}>{el.ProductName}</Text>
           <Text style={styles.subText}>{el.CatalogName}</Text>
@@ -92,7 +97,7 @@ function Purchase({ el }) {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -122,5 +127,3 @@ const styles = StyleSheet.create({
     color: "#FAEBD7",
   },
 });
-
-export default Purchase;

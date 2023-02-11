@@ -106,9 +106,9 @@ export default function BackgroundNotification() {
     <View style={styles.screen}>
       <TouchableOpacity onPress={toggleFetchTask}>
         {isRegistered ? (
-          <Ionicons name="volume-high-outline" size={32} color="#FAEBD7" />
+          <Ionicons name="volume-high-outline" size={24} color="#FAEBD7" />
         ) : (
-          <Ionicons name="volume-mute-outline" size={32} color="red" />
+          <Ionicons name="volume-mute-outline" size={24} color="red" />
         )}
       </TouchableOpacity>
     </View>

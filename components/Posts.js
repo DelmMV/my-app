@@ -1,10 +1,9 @@
-import React, { useState, useContext, memo } from "react";
+import React, { useState, useContext, memo, useEffect } from "react";
 import AppContext from "../contexts/AppContext";
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { days, orderStatus } from "../utils/constans.js";
 import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
-import QRCode from "react-qr-code";
 import { useNavigation } from "@react-navigation/native";
 import { Audio } from "expo-av";
 import GetUserTime from "./GetUserTime.js";
@@ -12,11 +11,14 @@ import { showLocation } from "react-native-map-link";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ColorStatus } from "./ColorStatus";
 import { PostOrder } from "../api/PostOrder";
-import { useFetchPosts } from "../hooks";
+import { Wishes, ClientComment } from "./WishesPost";
+import { useCountLogsStore } from "../contexts/store";
 
 export const Post = memo(function Post({ el }) {
+  const increaseCount = useCountLogsStore((state) => state.increaseCount);
+
   const color = ColorStatus(el);
-  const { value2, counter } = useContext(AppContext);
+  const { value2 } = useContext(AppContext);
   const options = {
     latitude: el.Latitude,
     longitude: el.Longitude,
@@ -26,35 +28,10 @@ export const Post = memo(function Post({ el }) {
   const { setCounter } = useContext(AppContext);
   const [showWishes, setShowWishes] = useState(false);
   const navigation = useNavigation();
-  const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
 
   const handelePurchase = (id) => {
     setCounter(id);
     navigation.push("PurchaseScreen");
-  };
-  const Wishes = () => {
-    if (el.Wishes.length > 0) {
-      let res = "";
-      el.Wishes.forEach((element) => {
-        res += `${element["Name"].slice(0, 1)} `;
-      });
-      return (
-        <Text style={styles.text}>
-          Пожелания:{"  "}
-          <Text style={{ color: "orange", fontWeight: "700" }}>{res}</Text>
-        </Text>
-      );
-    } else {
-      return <></>;
-    }
-  };
-
-  const ClientComment = () => {
-    if (el.ClientComment) {
-      return el.ClientComment;
-    } else {
-      return "";
-    }
   };
 
   const handlePostOrder = () => {
@@ -67,6 +44,7 @@ export const Post = memo(function Post({ el }) {
     })
       .then((result) => {
         if (result.status == 200) {
+          increaseCount();
           navigation.push("ScreenDelivery");
         }
       })
@@ -74,7 +52,6 @@ export const Post = memo(function Post({ el }) {
         console.error(err);
       });
   };
-
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -111,8 +88,8 @@ export const Post = memo(function Post({ el }) {
           </TouchableOpacity>
         </View>
 
-        <Wishes />
-
+        {/* <Wishes /> */}
+        {Wishes(el)}
         <View style={{ flexDirection: "row" }}>
           {el.ClientName ? (
             <Text style={styles.text}>Клинет: {el.ClientName} </Text>
@@ -154,10 +131,10 @@ export const Post = memo(function Post({ el }) {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          disabled={ClientComment().length > 0 ? false : true}
+          disabled={ClientComment(el).length > 0 ? false : true}
           onPress={() => setShowWishes(!showWishes)}
         >
-          {ClientComment().length > 0 ? (
+          {ClientComment(el).length > 0 ? (
             <Text style={styles.button}>
               <Ionicons
                 name="chatbox-ellipses-outline"
@@ -205,7 +182,7 @@ export const Post = memo(function Post({ el }) {
               textAlignVertical: "center",
             }}
           >
-            <ClientComment />
+            {ClientComment(el)}
           </Text>
         </View>
       )}
