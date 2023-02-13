@@ -1,13 +1,17 @@
-import React, { memo } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Image } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 import { cacheImage } from "../utils/cacheImage";
-import Checkbox from "expo-checkbox";
+import { Image } from "expo-image";
 
 function Purchase({ el }) {
+  const [cache, setCache] = useState(null);
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
+
+  const uri = `${pictureId.baseURL}${pictureId.url}`;
+  const preview = require("../assets/icon.png");
 
   const products = el.Products;
   const ProductsSerch = () => {
@@ -57,7 +61,8 @@ function Purchase({ el }) {
           <ActivityIndicator />
         ) : (
           <Image
-            source={{ uri: `${pictureId.baseURL}${pictureId.url}` }}
+            cachePolicy="memory"
+            uri={uri}
             style={{
               width: 45,
               height: 45,
