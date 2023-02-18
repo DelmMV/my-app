@@ -1,17 +1,25 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-// export const useLogsStore = create((set) => ({
-//   logs: [],
-//   error: null,
-//   addLogs: (order) =>
-//     set((state) => {
-//       const newLogs = { order };
-
-//       return { logs: [...state.logs, newLogs] };
-//     }),
-// }));
+export const useLogsStore = create(
+  persist(
+    (set) => ({
+      log: [],
+      removeLogs: () => {
+        set({ log: [] });
+      },
+      addLogs: (order) => {
+        set((state) => ({
+          log: [...state.log, order],
+        }));
+      },
+    }),
+    {
+      name: "logOrder",
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
 
 export const useCountLogsStore = create(
   persist(

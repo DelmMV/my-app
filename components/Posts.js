@@ -12,10 +12,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ColorStatus } from "./ColorStatus";
 import { PostOrder } from "../api/PostOrder";
 import { Wishes, ClientComment } from "./WishesPost";
-import { useCountLogsStore } from "../contexts/store";
+import { useLogsStore } from "../contexts/store";
 
 export const Post = memo(function Post({ el }) {
-  const increaseCount = useCountLogsStore((state) => state.increaseCount);
+  const addLogs = useLogsStore((state) => () => state.addLogs(order));
 
   const color = ColorStatus(el);
   const { value2 } = useContext(AppContext);
@@ -44,7 +44,7 @@ export const Post = memo(function Post({ el }) {
     })
       .then((result) => {
         if (result.status == 200) {
-          increaseCount();
+          addLogs();
           navigation.push("ScreenDelivery");
         }
       })

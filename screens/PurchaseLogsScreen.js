@@ -25,15 +25,18 @@ import GetUserTime from "../components/GetUserTime";
 import { WishesOrder } from "../components/WishesOrder";
 import { useCountLogsStore, useLogsStore } from "../contexts/store";
 
-const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
+const PurchaseLogsScreen = memo(function PurchaseLogsScreen({ navigation }) {
   const [order, setOrder] = useState(0);
   const { counter, item, value2 } = useContext(AppContext);
   const { isLoading, purchase, onRefresh, isRefreshing } =
     useFetchPurchase(counter);
+  const addLogs = useLogsStore((state) => () => state.addLogs(order));
+  const logCount = useLogsStore((state) => state.log);
+
   const color = ColorStatus(order);
   console.log("ScreenP");
   useEffect(() => {
-    item.forEach((element) => {
+    logCount.forEach((element) => {
       if (element.OrderId === counter) {
         setOrder(element);
       }
@@ -50,8 +53,6 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
   };
 
   const increaseCount = useCountLogsStore((state) => state.increaseCount);
-  const addLogs = useLogsStore((state) => () => state.addLogs(order));
-  const logCount = useLogsStore((state) => state.log);
 
   const handlePostOrder = () => {
     PostOrder({
@@ -234,28 +235,6 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
       </View>
 
       {/* <Button onPress={addLogs} title="1" color="green" /> */}
-      {order.Status === 6 ? (
-        <View>
-          <Text
-            style={{
-              width: "50%",
-              height: 40,
-              color: "white",
-              borderRadius: 5,
-              backgroundColor: "green",
-              textAlign: "center",
-              textAlignVertical: "center",
-              alignSelf: "center",
-            }}
-            disabled={order.Status === 6 ? false : true}
-            onPress={handlePostOrder}
-          >
-            <Ionicons name="checkmark-circle-outline" size={32} color="white" />
-          </Text>
-        </View>
-      ) : (
-        <View></View>
-      )}
     </SafeAreaView>
   );
 });
@@ -299,4 +278,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PurchaseScreen;
+export default PurchaseLogsScreen;

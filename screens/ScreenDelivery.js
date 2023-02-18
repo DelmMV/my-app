@@ -19,10 +19,21 @@ import DropDownList2 from "../components/DropDownList2";
 import AppContext from "../contexts/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FilterItem } from "../components/FilterItem";
-import { useCountLogsStore } from "../contexts/store";
+import { useLogsStore } from "../contexts/store";
+import { GetUserTimeLogs } from "../components/GetUserTime";
 
 const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
-  const count = useCountLogsStore((state) => state.logs);
+  const count = useLogsStore((state) => state.log);
+  const currentTime = GetUserTimeLogs(new Date());
+
+  const FilterCurentDay = () => {
+    const result = [
+      ...count.filter(
+        (e) => GetUserTimeLogs(new Date(e.WishingDate)) === currentTime
+      ),
+    ];
+    return <Text>Доставлено {result.length} з.</Text>;
+  };
 
   const [point, setPoint] = useState("");
   const { value } = useContext(AppContext);
@@ -58,13 +69,7 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
   const handleStatistics = () => {
     navigation.push("StatisticsSreen");
   };
-  function profit() {
-    let result = 0;
-    posts.forEach((element) => {
-      result = result + element.Price;
-    });
-    return result;
-  }
+
   console.log("screenD");
   return (
     <SafeAreaView style={styles.container}>
@@ -116,10 +121,11 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="small" />
+        <ActivityIndicator size="large" style={{ flex: 1 }} />
       ) : (
         <FlatList
           extraData={filter}
+          initialNumToRender={3}
           onRefresh={onRefresh}
           refreshing={isRefreshing}
           ListEmptyComponent={Empty}
@@ -129,8 +135,7 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
         />
       )}
       <Text style={styles.botText}>
-        Доставил заказов {count} || Всего заказов {posts.length} || Выручка{" "}
-        {profit()}₽
+        <FilterCurentDay /> || Всего {posts.length} з.
       </Text>
     </SafeAreaView>
   );
@@ -160,7 +165,9 @@ const styles = StyleSheet.create({
   botText: {
     color: "#FAEBD7",
     alignSelf: "center",
-    fontSize: 12,
+    fontSize: 13,
+    marginBottom: 3,
+    marginTop: 3,
   },
   topText: {
     color: "#FAEBD7",

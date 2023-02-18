@@ -2,11 +2,10 @@ import React, { memo, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 import { Image } from "react-native-expo-image-cache";
-import Checkbox from "expo-checkbox";
 
-export default Purchase = memo(function Purchase({ el }) {
-  const [isChecked, setChecked] = useState(false);
-
+export default StatisticsLogPurchase = memo(function StatisticsLogPurchase({
+  el,
+}) {
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
@@ -53,15 +52,6 @@ export default Purchase = memo(function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        {/* <Checkbox
-          value={isChecked}
-          onValueChange={setChecked}
-          style={{ right: 5, top: 15 }}
-        /> */}
-        {/* {isLoading ? (
-          ActivityIndicator
-        ) : (
-          )} */}
         <Image
           defaultSource={{ uri: uri, cache: "force-cache" }}
           style={{
