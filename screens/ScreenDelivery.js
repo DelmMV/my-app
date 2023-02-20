@@ -146,20 +146,20 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "space-around",
           height: 50,
         }}
       >
-        <View style={styles.bottomButton}>
-          <TouchableOpacity onPress={handleStatistics}>
-            <Ionicons name="podium-outline" size={24} color="#FAEBD7" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bottomButton}>
-          <TouchableOpacity onPress={handleMap}>
-            <Ionicons name="map-outline" size={24} color="#FAEBD7" />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.bottomButton}
+          onPress={handleStatistics}
+        >
+          <Ionicons name="podium-outline" size={24} color="#FAEBD7" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.bottomButton} onPress={handleMap}>
+          <Ionicons name="map-outline" size={24} color="#FAEBD7" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     margin: 3,
     borderRadius: 15,
     borderWidth: 2,
-    width: "50%",
+    width: "45%",
     backgroundColor: "#182533",
     borderColor: "#17312b",
     alignItems: "center",
