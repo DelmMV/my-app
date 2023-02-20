@@ -73,43 +73,51 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
   console.log("screenD");
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ paddingTop: 38, marginLeft: 11 }}>
-        <Text style={styles.topText}> {point}</Text>
-      </View>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center",
-          paddingTop: 1,
-          marginLeft: 11,
-          marginRight: 11,
         }}
       >
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            marginTop: 38,
+            marginLeft: 11,
+            padding: 4,
+            backgroundColor: "#182533",
+            borderWidth: 1,
+            borderRadius: 5,
+            alignSelf: "center",
+            borderColor: "#17312b",
+          }}
+        >
+          <Text style={styles.topText}> {point}</Text>
+          <Text style={styles.botText}>
+            <FilterCurentDay /> || Всего {posts.length} з.
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            paddingTop: 38,
+            marginLeft: 11,
+            marginRight: 11,
+          }}
+        >
           <Navigation />
-          <TouchableOpacity onPress={handleStatistics} style={{ margin: 10 }}>
-            <Ionicons name="podium-outline" size={24} color="#FAEBD7" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleMap}
-            style={{ marginLeft: 30, marginTop: 10, marginBottom: 10 }}
-          >
-            <Ionicons name="map-outline" size={24} color="#FAEBD7" />
+          <TouchableOpacity onPress={removeValue} style={{ marginLeft: 15 }}>
+            <Ionicons name="log-out-outline" size={24} color="red" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={removeValue}>
-          <Ionicons name="log-out-outline" size={24} color="red" />
-        </TouchableOpacity>
       </View>
-
       <StatusBar style="light" backgroundColor="#17212b" />
       <View
         style={{
           flexDirection: "row",
           alignSelf: "center",
           width: "95%",
-          //zIndex: 0,
         }}
       >
         <View style={{ width: "50%", paddingRight: 5 }}>
@@ -134,9 +142,25 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
           renderItem={({ item }) => <Post el={item} />}
         />
       )}
-      <Text style={styles.botText}>
-        <FilterCurentDay /> || Всего {posts.length} з.
-      </Text>
+
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          height: 50,
+        }}
+      >
+        <View style={styles.bottomButton}>
+          <TouchableOpacity onPress={handleStatistics}>
+            <Ionicons name="podium-outline" size={24} color="#FAEBD7" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.bottomButton}>
+          <TouchableOpacity onPress={handleMap}>
+            <Ionicons name="map-outline" size={24} color="#FAEBD7" />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 });
@@ -157,19 +181,11 @@ const styles = StyleSheet.create({
     color: "white",
   },
   topText: {
-    marginStart: 11,
-    marginTop: 30,
+    right: 2,
     color: "#FAEBD7",
-    //alignSelf: "left",
+    fontSize: 12,
   },
   botText: {
-    color: "#FAEBD7",
-    alignSelf: "center",
-    fontSize: 13,
-    marginBottom: 3,
-    marginTop: 3,
-  },
-  topText: {
     color: "#FAEBD7",
     fontSize: 12,
   },
@@ -190,6 +206,16 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     textAlign: "center",
     textAlignVertical: "center",
+  },
+  bottomButton: {
+    margin: 3,
+    borderRadius: 15,
+    borderWidth: 2,
+    width: "50%",
+    backgroundColor: "#182533",
+    borderColor: "#17312b",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

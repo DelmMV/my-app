@@ -15,7 +15,7 @@ import { Wishes, ClientComment } from "./WishesPost";
 import { useLogsStore } from "../contexts/store";
 
 export const Post = memo(function Post({ el }) {
-  const addLogs = useLogsStore((state) => () => state.addLogs(order));
+  const addLogs = useLogsStore((state) => () => state.addLogs(el));
 
   const color = ColorStatus(el);
   const { value2 } = useContext(AppContext);
