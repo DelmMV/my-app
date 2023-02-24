@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, memo } from "react";
+import React, { useContext, useEffect, useState, memo, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -21,8 +21,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { FilterItem } from "../components/FilterItem";
 import { useLogsStore } from "../contexts/store";
 import { GetUserTimeLogs } from "../components/GetUserTime";
+// import useSound from "use-sound";
+// import soundNotification from "../assets/sound.mp3";
 
-const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
+//import { Audio } from "expo-av";
+
+function ScreenDelivery({ navigation }) {
   const count = useLogsStore((state) => state.log);
   const currentTime = GetUserTimeLogs(new Date());
 
@@ -34,7 +38,6 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
     ];
     return <Text>Доставлено {result.length} з.</Text>;
   };
-
   const [point, setPoint] = useState("");
   const { value } = useContext(AppContext);
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
@@ -47,29 +50,37 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       console.log(err);
     }
   };
+
+  // const searchSound = () => {
+  //   const [playSound] = useSound(soundNotification);
+  //   if ([...posts.filter((e) => e.Status === 7)].length !== 0) {
+  //     return playSound;
+  //   }
+  // };
+
+  // useEffect(() => {}, []);
+
   useEffect(() => {
     myPoint();
   }, [point]);
 
-  useEffect(() => {
-    setInterval(onRefresh, 0.5 * 60 * 1000);
-  }, []);
-
   const removeValue = async () => {
     try {
       await AsyncStorage.removeItem("AccessToken");
-      navigation.replace("LoginScreen");
+      navigation.navigate("LoginScreen");
     } catch (e) {
       console.log(e);
     }
   };
+
+  const removeOrder = (id) => {};
+
   const handleMap = () => {
-    navigation.push("MapScreen");
+    navigation.navigate("MapScreen");
   };
   const handleStatistics = () => {
-    navigation.push("StatisticsSreen");
+    navigation.navigate("StatisticsSreen");
   };
-
   console.log("screenD");
   return (
     <SafeAreaView style={styles.container}>
@@ -139,12 +150,15 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
           ListEmptyComponent={Empty}
           data={filter}
           keyExtractor={(item) => item.OrderId}
-          renderItem={({ item }) => <Post el={item} />}
+          renderItem={({ item }) => (
+            <Post el={item} id={item.OrderId} onRefresh={onRefresh} />
+          )}
         />
       )}
 
       <View
         style={{
+          backgroundColor: "rgba(24, 37, 52, 1);",
           flexDirection: "row",
           justifyContent: "space-around",
           height: 50,
@@ -163,7 +177,7 @@ const ScreenDelivery = memo(function ScreenDelivery({ navigation }) {
       </View>
     </SafeAreaView>
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -210,9 +224,9 @@ const styles = StyleSheet.create({
   bottomButton: {
     margin: 3,
     borderRadius: 15,
-    borderWidth: 2,
+    borderWidth: 1,
     width: "45%",
-    backgroundColor: "#182533",
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
     borderColor: "#17312b",
     alignItems: "center",
     justifyContent: "center",

@@ -7,7 +7,7 @@ export default function SplashScreen({ navigation }) {
   useEffect(() => {
     setTimeout(() => {
       handleGetToken();
-    }, 2000);
+    }, 1000);
   });
 
   const handleGetToken = async () => {

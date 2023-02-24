@@ -25,11 +25,13 @@ import GetUserTime from "../components/GetUserTime";
 import { WishesOrder } from "../components/WishesOrder";
 import { useCountLogsStore, useLogsStore } from "../contexts/store";
 
-const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
+function PurchaseScreen({ navigation }) {
   const [order, setOrder] = useState(0);
   const { counter, item, value2 } = useContext(AppContext);
+
   const { isLoading, purchase, onRefresh, isRefreshing } =
     useFetchPurchase(counter);
+
   const color = ColorStatus(order);
   console.log("ScreenP");
   useEffect(() => {
@@ -65,14 +67,15 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
         console.log(result);
         if (result.status == 200) {
           addLogs();
-          navigation.replace("ScreenDelivery");
+          navigation.push("ScreenDelivery");
         }
       })
       .catch((err) => {
         console.error(err);
       });
   };
-  const Header = () => {
+
+  const Header = memo(function Header() {
     return (
       <>
         <View>{wishesOrder}</View>
@@ -90,8 +93,8 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
         <Seporator />
       </>
     );
-  };
-  const Footer = () => {
+  });
+  const Footer = memo(function Footer() {
     return (
       <>
         <View style={{ marginBottom: 5, flex: 1 }}>
@@ -164,13 +167,11 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
             alignSelf: "center",
             marginBottom: 5,
           }}
-          mapType="standard"
-          userLocationPriority="passive"
           initialRegion={{
             latitude: order.Latitude,
             longitude: order.Longitude,
-            latitudeDelta: 0.0065,
-            longitudeDelta: 0.0065,
+            latitudeDelta: 0.007,
+            longitudeDelta: 0.007,
           }}
         >
           <Marker
@@ -183,7 +184,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
         </MapView>
       </>
     );
-  };
+  });
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -234,7 +235,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
       </View>
 
       {/* <Button onPress={addLogs} title="1" color="green" /> */}
-      {order.Status === 6 ? (
+      {/* {order.Status === 7 ? (
         <View>
           <Text
             style={{
@@ -247,7 +248,7 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
               textAlignVertical: "center",
               alignSelf: "center",
             }}
-            disabled={order.Status === 6 ? false : true}
+            disabled={order.Status === 7 ? false : true}
             onPress={handlePostOrder}
           >
             <Ionicons name="checkmark-circle-outline" size={32} color="white" />
@@ -255,10 +256,10 @@ const PurchaseScreen = memo(function PurchaseScreen({ navigation }) {
         </View>
       ) : (
         <View></View>
-      )}
+      )} */}
     </SafeAreaView>
   );
-});
+}
 const styles = StyleSheet.create({
   container: {
     height: "100%",
@@ -275,7 +276,9 @@ const styles = StyleSheet.create({
     height: 40,
     color: "white",
     borderRadius: 5,
-    backgroundColor: "green",
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
+    borderColor: "#17312b",
+    borderWidth: 1,
     textAlign: "center",
     textAlignVertical: "center",
     marginTop: 45,

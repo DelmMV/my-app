@@ -23,7 +23,7 @@ export default function LoginScreen({ navigation }) {
         if (result.status == 200) {
           AsyncStorage.setItem("AccessToken", result.headers.token);
           AsyncStorage.setItem("Point", result.data.ShopName);
-          navigation.replace("ScreenDelivery");
+          navigation.navigate("ScreenDelivery");
         }
       })
       .catch((err) => {

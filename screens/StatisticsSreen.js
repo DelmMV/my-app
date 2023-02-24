@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   View,
   Platform,
+  Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -52,6 +53,17 @@ export default function StatisticsSreen({ navigation }) {
   useEffect(() => {
     setFilter(filterCurentDay());
   }, []);
+
+  const deleteHistory = () =>
+    Alert.alert("Очистить историю?", "Все данные будут удалены!", [
+      { text: "Нет" },
+      {
+        text: "Да",
+        onPress: () => {
+          removeLogs();
+        },
+      },
+    ]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,8 +148,12 @@ export default function StatisticsSreen({ navigation }) {
         />
       </View>
 
-      <View style={{ width: 100, alignContent: "center", alignSelf: "center" }}>
-        <Button onPress={removeLogs} title="Reset log" color="green" />
+      <View style={{ width: 200, alignContent: "center", alignSelf: "center" }}>
+        <Button
+          onPress={deleteHistory}
+          title="Очистить историю"
+          color="rgba(62, 84, 106, 0.5)"
+        />
       </View>
     </SafeAreaView>
   );
@@ -157,23 +173,26 @@ const styles = StyleSheet.create({
     padding: 8,
     height: 40,
     color: "white",
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: "green",
+    borderRadius: 20,
     textAlignVertical: "center",
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
+    borderColor: "#17312b",
+    borderWidth: 1,
   },
   button: {
     width: 70,
     height: 40,
     color: "white",
     borderRadius: 20,
-    backgroundColor: "green",
     textAlign: "center",
     textAlignVertical: "center",
     marginStart: 10,
     marginEnd: 10,
     marginBottom: 3,
     fontSize: 16,
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
+    borderColor: "#17312b",
+    borderWidth: 1,
   },
   selectedDateContainerStyle: {
     height: 35,

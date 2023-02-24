@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext, memo } from "react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { featchPost } from "../api/index";
 import AppContext from "../contexts/AppContext";
 
@@ -9,19 +10,40 @@ export const useFetchPosts = function useFetchPosts() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    let isCanceled = false;
     featchPost().then((newPosts) => {
-      setItem(newPosts);
-      setPosts(newPosts);
-      setLoading(false);
+      if (!isCanceled) {
+        setItem(newPosts);
+        setPosts(newPosts);
+        setLoading(false);
+      }
     });
+
+    return () => {
+      isCanceled = true;
+    };
+  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => onRefresh(), 30000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   async function onRefresh() {
+    let isCanceled = false;
     setRefreshing(true);
     const newPosts = await featchPost();
-    setItem(newPosts);
-    setPosts(newPosts);
-    setRefreshing(false);
+    if (!isCanceled) {
+      setItem(newPosts);
+      setPosts(newPosts);
+      setRefreshing(false);
+    }
+
+    return () => {
+      isCanceled = true;
+    };
   }
 
   return { isLoading, posts, onRefresh, isRefreshing };

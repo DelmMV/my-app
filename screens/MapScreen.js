@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     height: 40,
     color: "white",
     borderRadius: 20,
-    backgroundColor: "green",
     textAlign: "center",
     textAlignVertical: "center",
     marginTop: 40,
@@ -123,6 +122,9 @@ const styles = StyleSheet.create({
     marginEnd: 10,
     marginBottom: 3,
     fontSize: 16,
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
+    borderColor: "#17312b",
+    borderWidth: 1,
   },
 });
 export default MapScreen;

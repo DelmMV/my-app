@@ -1,11 +1,10 @@
-import React, { useState, useContext, memo, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import AppContext from "../contexts/AppContext";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { days, orderStatus } from "../utils/constans.js";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { orderStatus } from "../utils/constans.js";
 import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
 import { useNavigation } from "@react-navigation/native";
-import { Audio } from "expo-av";
 import GetUserTime from "./GetUserTime.js";
 import { showLocation } from "react-native-map-link";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -14,9 +13,9 @@ import { PostOrder } from "../api/PostOrder";
 import { Wishes, ClientComment } from "./WishesPost";
 import { useLogsStore } from "../contexts/store";
 
-export const Post = memo(function Post({ el }) {
+export function Post({ el, onRefresh }) {
+  const count = useLogsStore((state) => state.log);
   const addLogs = useLogsStore((state) => () => state.addLogs(el));
-
   const color = ColorStatus(el);
   const { value2 } = useContext(AppContext);
   const options = {
@@ -45,13 +44,25 @@ export const Post = memo(function Post({ el }) {
       .then((result) => {
         if (result.status == 200) {
           addLogs();
-          navigation.push("ScreenDelivery");
+          onRefresh();
         }
       })
       .catch((err) => {
         console.error(err);
       });
   };
+
+  const alertHandlePostOrder = () =>
+    Alert.alert("Заказ доставлен?", "Вы уверены?", [
+      { text: "Нет" },
+      {
+        text: "Да",
+        onPress: () => {
+          handlePostOrder();
+        },
+      },
+    ]);
+
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -87,8 +98,6 @@ export const Post = memo(function Post({ el }) {
             />
           </TouchableOpacity>
         </View>
-
-        {/* <Wishes /> */}
         {Wishes(el)}
         <View style={{ flexDirection: "row" }}>
           {el.ClientName ? (
@@ -149,7 +158,7 @@ export const Post = memo(function Post({ el }) {
         {el.Status === 6 ? (
           <TouchableOpacity
             disabled={el.Status === 6 ? false : true}
-            onPress={handlePostOrder}
+            onPress={alertHandlePostOrder}
           >
             <Text style={styles.button}>
               <Ionicons
@@ -188,7 +197,7 @@ export const Post = memo(function Post({ el }) {
       )}
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -199,7 +208,7 @@ const styles = StyleSheet.create({
     margin: 10,
     marginBottom: 5,
     marginTop: 5,
-    backgroundColor: "#182533",
+    backgroundColor: "#182534",
   },
   text: {
     marginBottom: 6,
@@ -226,9 +235,10 @@ const styles = StyleSheet.create({
     height: 40,
     color: "#FAEBD7",
     borderWidth: 1,
+    borderColor: "#17312b",
     borderRadius: 20,
     padding: 5,
-    backgroundColor: "green",
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
     textAlign: "center",
     textAlignVertical: "center",
   },

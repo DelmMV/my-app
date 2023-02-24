@@ -13,7 +13,7 @@ export const StatisticsLogs = ({ el }) => {
 
   const handelePurchase = (id) => {
     setCounter(id);
-    navigation.push("PurchaseLogsScreen");
+    navigation.navigate("PurchaseLogsScreen");
   };
 
   return (

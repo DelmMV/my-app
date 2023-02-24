@@ -52,27 +52,6 @@ const PurchaseLogsScreen = memo(function PurchaseLogsScreen({ navigation }) {
     directionsMode: "car",
   };
 
-  const increaseCount = useCountLogsStore((state) => state.increaseCount);
-
-  const handlePostOrder = () => {
-    PostOrder({
-      Status: 7,
-      OrderID: counter,
-      CancelReasonID: 1,
-      Comment: "",
-      WishingDate: null,
-    })
-      .then((result) => {
-        console.log(result);
-        if (result.status == 200) {
-          addLogs();
-          navigation.replace("ScreenDelivery");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
   const Header = () => {
     return (
       <>
