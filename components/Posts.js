@@ -53,7 +53,7 @@ export function Post({ el, onRefresh }) {
   };
 
   const alertHandlePostOrder = () =>
-    Alert.alert("Заказ доставлен?", "Вы уверены?", [
+    Alert.alert("Важно!", "Заказ доставлен?", [
       { text: "Нет" },
       {
         text: "Да",

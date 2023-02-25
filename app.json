@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Доставщик85",
+    "name": "Доставщик.85",
     "slug": "tseh85_N",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/ic_launcher_round.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#17212b"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

@@ -141,7 +141,7 @@ function PurchaseScreen({ navigation }) {
           </Text>
           {order.DateComplete ? (
             <Text style={styles.infotext}>
-              Время подтверждения заказа:
+              Время подтверждения заказа:{" "}
               {GetUserTime(new Date(order.DateComplete))}
             </Text>
           ) : (
@@ -195,7 +195,7 @@ function PurchaseScreen({ navigation }) {
         >
           <TouchableOpacity onPress={() => navigation.pop()}>
             <Text style={styles.button}>
-              <Ionicons name="chevron-back-outline" size={16} color="white" />
+              <Ionicons name="chevron-back-outline" size={20} color="white" />
             </Text>
           </TouchableOpacity>
           <View style={{ width: 200 }}>

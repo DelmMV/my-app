@@ -55,7 +55,7 @@ export default function StatisticsSreen({ navigation }) {
   }, []);
 
   const deleteHistory = () =>
-    Alert.alert("Очистить историю?", "Все данные будут удалены!", [
+    Alert.alert("Осторожно!", "Все данные будут удалены.", [
       { text: "Нет" },
       {
         text: "Да",
@@ -71,7 +71,7 @@ export default function StatisticsSreen({ navigation }) {
         <View>
           <TouchableOpacity onPress={() => navigation.pop()}>
             <Text style={styles.button}>
-              <Ionicons name="return-up-back-outline" size={34} color="white" />
+              <Ionicons name="chevron-back-outline" size={20} color="white" />
             </Text>
           </TouchableOpacity>
         </View>
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   button: {
-    width: 70,
+    width: 80,
     height: 40,
     color: "white",
     borderRadius: 20,

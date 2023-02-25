@@ -104,11 +104,11 @@ export default function BackgroundNotification() {
 
   return (
     <View style={styles.screen}>
-      <TouchableOpacity onPress={toggleFetchTask}>
+      <TouchableOpacity onPress={toggleFetchTask} style={styles.topButton}>
         {isRegistered ? (
-          <Ionicons name="volume-high-outline" size={24} color="#FAEBD7" />
+          <Ionicons name="notifications-outline" size={24} color="#FAEBD7" />
         ) : (
-          <Ionicons name="volume-mute-outline" size={24} color="red" />
+          <Ionicons name="notifications-off-outline" size={24} color="red" />
         )}
       </TouchableOpacity>
     </View>
@@ -141,5 +141,15 @@ const styles = StyleSheet.create({
     bottom: 2,
     textAlignVertical: "center",
     textAlign: "center",
+  },
+  topButton: {
+    backgroundColor: "rgba(62, 84, 106, 0.5)",
+    borderColor: "#17312b",
+    borderWidth: 2,
+    borderRadius: 20,
+    width: 37,
+    height: 37,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
