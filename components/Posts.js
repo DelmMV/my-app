@@ -1,6 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import AppContext from "../contexts/AppContext";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { orderStatus } from "../utils/constans.js";
 import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
@@ -32,6 +39,8 @@ export function Post({ el, onRefresh }) {
   };
   const { setCounter } = useContext(AppContext);
   const [showWishes, setShowWishes] = useState(false);
+  const [isRefreshing, setRefreshing] = useState(false);
+
   const navigation = useNavigation();
 
   const scale = useSharedValue(0);
@@ -50,6 +59,7 @@ export function Post({ el, onRefresh }) {
   };
 
   const handlePostOrder = () => {
+    setRefreshing(true);
     PostOrder({
       Status: 7,
       OrderID: el.OrderId,
@@ -59,6 +69,7 @@ export function Post({ el, onRefresh }) {
     })
       .then((result) => {
         if (result.status == 200) {
+          setRefreshing(false);
           addLogs();
           onRefresh();
         }
@@ -176,17 +187,21 @@ export function Post({ el, onRefresh }) {
             <></>
           )}
         </TouchableOpacity>
-        {el.Status === 6 ? (
+        {el.Status === 7 ? (
           <TouchableOpacity
-            disabled={el.Status === 6 ? false : true}
+            disabled={el.Status === 7 ? false : true}
             onPress={alertHandlePostOrder}
           >
             <Text style={styles.button}>
-              <Ionicons
-                name="checkmark-circle-outline"
-                size={22}
-                color="white"
-              />
+              {!isRefreshing ? (
+                <Ionicons
+                  name="checkmark-circle-outline"
+                  size={22}
+                  color="white"
+                />
+              ) : (
+                <ActivityIndicator size="small" />
+              )}
             </Text>
           </TouchableOpacity>
         ) : (

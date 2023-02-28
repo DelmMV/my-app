@@ -35,3 +35,17 @@ export const useCountLogsStore = create(
     }
   )
 );
+
+export const useSoundToggle = create(
+  persist(
+    (set) => ({
+      sound: false,
+      onSound: () => set((state) => ({ sound: true })),
+      offSound: () => set((state) => ({ sound: false })),
+    }),
+    {
+      name: "sound",
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);

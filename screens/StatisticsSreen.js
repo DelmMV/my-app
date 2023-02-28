@@ -116,21 +116,21 @@ export default function StatisticsSreen({ navigation }) {
 
       <View style={{ alignSelf: "flex-start", marginLeft: 10, marginTop: 10 }}>
         {filterCurentDay().length ? (
-          <Text style={{ color: "white" }}>
+          <Text style={{ color: "#FAEBD7" }}>
             Доставленно сегодня: {filterCurentDay().length}
           </Text>
         ) : (
           <></>
         )}
         {filterRange().length ? (
-          <Text style={{ color: "white" }}>
+          <Text style={{ color: "#FAEBD7" }}>
             В период с {selectedRange.firstDate} до {selectedRange.secondDate}{" "}
             доставлено: {filterRange().length} з.
           </Text>
         ) : (
           <></>
         )}
-        <Text style={{ color: "white" }}>
+        <Text style={{ color: "#FAEBD7" }}>
           Доставлено за все время: {logCount.length} з.
         </Text>
       </View>
@@ -165,14 +165,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    color: "white",
+    color: "#FAEBD7",
     paddingBottom: 20,
     paddingStart: 20,
   },
   button_filter: {
     padding: 8,
     height: 40,
-    color: "white",
+    color: "#FAEBD7",
     borderRadius: 20,
     textAlignVertical: "center",
     backgroundColor: "rgba(62, 84, 106, 0.5)",
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   button: {
     width: 80,
     height: 40,
-    color: "white",
+    color: "#FAEBD7",
     borderRadius: 20,
     textAlign: "center",
     textAlignVertical: "center",
@@ -201,10 +201,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "green",
     borderRadius: 20,
-    color: "white",
+    color: "#FAEBD7",
   },
   selectedDateStyle: {
     fontWeight: "bold",
-    color: "white",
+    color: "#FAEBD7",
   },
 });

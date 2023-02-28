@@ -20,13 +20,18 @@ import DropDownList2 from "../components/DropDownList2";
 import AppContext from "../contexts/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FilterItem } from "../components/FilterItem";
-import { useLogsStore } from "../contexts/store";
+import { useLogsStore, useSoundToggle } from "../contexts/store";
 import { GetUserTimeLogs } from "../components/GetUserTime";
 import { Audio } from "expo-av";
 
 function ScreenDelivery({ navigation }) {
-  const count = useLogsStore((state) => state.log);
   const currentTime = GetUserTimeLogs(new Date());
+
+  const count = useLogsStore((state) => state.log);
+
+  const soundState = useSoundToggle((state) => state.sound);
+  const onSound = useSoundToggle((state) => state.onSound);
+  const offSound = useSoundToggle((state) => state.offSound);
 
   const FilterCurentDay = () => {
     const result = [
@@ -37,7 +42,7 @@ function ScreenDelivery({ navigation }) {
     return <Text>Доставлено {result.length} з.</Text>;
   };
   const [point, setPoint] = useState("");
-  const [isSound, setSound] = useState(false);
+  const [isSound, setSound] = useState(soundState);
 
   const { value } = useContext(AppContext);
   const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
@@ -79,7 +84,11 @@ function ScreenDelivery({ navigation }) {
   const handleSound = () => {
     if (isSound) {
       setSound(false);
-    } else setSound(true);
+      offSound();
+    } else {
+      setSound(true);
+      onSound();
+    }
   };
 
   const alertRemoveValue = () => {
@@ -96,7 +105,6 @@ function ScreenDelivery({ navigation }) {
 
   useEffect(() => {
     if (isSound) {
-      console.log("ON");
       const interval = setInterval(() => {
         if (posts.filter((e) => e.Status === 12).length !== 0) {
           console.log(posts.filter((e) => e.Status === 12).length);
@@ -107,7 +115,6 @@ function ScreenDelivery({ navigation }) {
         clearInterval(interval);
       };
     }
-    console.log("Off");
   }, [isSound, posts]);
 
   useEffect(() => {
