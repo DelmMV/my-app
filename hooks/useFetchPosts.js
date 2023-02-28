@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import { featchPost } from "../api/index";
 import AppContext from "../contexts/AppContext";
@@ -8,6 +8,7 @@ export const useFetchPosts = function useFetchPosts() {
   const [isLoading, setLoading] = useState(true);
   const [isRefreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const ref = useRef(null);
 
   useEffect(() => {
     let isCanceled = false;
@@ -23,11 +24,14 @@ export const useFetchPosts = function useFetchPosts() {
       isCanceled = true;
     };
   }, []);
+
   useEffect(() => {
-    const interval = setInterval(() => onRefresh(), 30000);
+    ref.current = setInterval(onRefresh, 0.5 * 60 * 1000);
 
     return () => {
-      clearInterval(interval);
+      if (ref.current) {
+        clearInterval(ref.current);
+      }
     };
   }, []);
 

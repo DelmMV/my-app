@@ -55,7 +55,7 @@ export default function StatisticsSreen({ navigation }) {
   }, []);
 
   const deleteHistory = () =>
-    Alert.alert("Осторожно!", "Все данные будут удалены.", [
+    Alert.alert("Внимание!", "Все данные будут удалены.", [
       { text: "Нет" },
       {
         text: "Да",

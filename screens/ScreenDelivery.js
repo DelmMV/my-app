@@ -83,7 +83,7 @@ function ScreenDelivery({ navigation }) {
   };
 
   const alertRemoveValue = () => {
-    Alert.alert("Важно!", "Вы точно хотите выйти?", [
+    Alert.alert("Внимание!", "Вы точно хотите выйти?", [
       { text: "Нет" },
       {
         text: "Да",

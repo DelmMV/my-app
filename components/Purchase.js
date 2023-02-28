@@ -2,15 +2,28 @@ import React, { memo, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 import { Image } from "react-native-expo-image-cache";
-import Checkbox from "expo-checkbox";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+} from "react-native-reanimated";
 
 export default Purchase = memo(function Purchase({ el }) {
-  const [isChecked, setChecked] = useState(false);
-
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
   const uri = `${pictureId.baseURL}${pictureId.url}`;
+
+  const scale = useSharedValue(0);
+  const progress = useSharedValue(1);
+
+  const reanimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: progress.value,
+      transform: [{ scale: scale.value }],
+    };
+  }, []);
 
   const products = el.Products;
   const ProductsSerch = () => {
@@ -44,8 +57,13 @@ export default Purchase = memo(function Purchase({ el }) {
     return <Text style={[styles.quantity]}>{el.Quantity}шт.</Text>;
   };
 
+  useEffect(() => {
+    progress.value = withTiming(3);
+    scale.value = withSpring(1);
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, reanimatedStyle]}>
       <View
         style={{
           flexDirection: "row",
@@ -53,17 +71,8 @@ export default Purchase = memo(function Purchase({ el }) {
           paddingTop: 10,
         }}
       >
-        {/* <Checkbox
-          value={isChecked}
-          onValueChange={setChecked}
-          style={{ right: 5, top: 15 }}
-        /> */}
-        {/* {isLoading ? (
-          ActivityIndicator
-        ) : (
-          )} */}
         <Image
-          defaultSource={{ uri: uri, cache: "force-cache" }}
+          defaultSource={{ uri: uri, cache: "default" }}
           style={{
             width: 45,
             height: 45,
@@ -92,7 +101,7 @@ export default Purchase = memo(function Purchase({ el }) {
       <View>
         <QuantityMarket />
       </View>
-    </View>
+    </Animated.View>
   );
 });
 

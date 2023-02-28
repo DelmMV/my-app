@@ -15,7 +15,7 @@ const Routers = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animation: "fade",
+        animation: "slide_from_right",
         animationDuration: 900,
       }}
     >

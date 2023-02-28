@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import AppContext from "../contexts/AppContext";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { orderStatus } from "../utils/constans.js";
@@ -12,6 +12,12 @@ import { ColorStatus } from "./ColorStatus";
 import { PostOrder } from "../api/PostOrder";
 import { Wishes, ClientComment } from "./WishesPost";
 import { useLogsStore } from "../contexts/store";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+} from "react-native-reanimated";
 
 export function Post({ el, onRefresh }) {
   const count = useLogsStore((state) => state.log);
@@ -27,6 +33,16 @@ export function Post({ el, onRefresh }) {
   const { setCounter } = useContext(AppContext);
   const [showWishes, setShowWishes] = useState(false);
   const navigation = useNavigation();
+
+  const scale = useSharedValue(0);
+  const progress = useSharedValue(1);
+
+  const reanimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: progress.value,
+      transform: [{ scale: scale.value }],
+    };
+  }, []);
 
   const handelePurchase = (id) => {
     setCounter(id);
@@ -53,7 +69,7 @@ export function Post({ el, onRefresh }) {
   };
 
   const alertHandlePostOrder = () =>
-    Alert.alert("Важно!", "Заказ доставлен?", [
+    Alert.alert("Внимание!", "Заказ доставлен?", [
       { text: "Нет" },
       {
         text: "Да",
@@ -63,8 +79,13 @@ export function Post({ el, onRefresh }) {
       },
     ]);
 
+  useEffect(() => {
+    progress.value = withTiming(1);
+    scale.value = withSpring(1);
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, reanimatedStyle]}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <TouchableOpacity
           style={styles.title}
@@ -195,7 +216,7 @@ export function Post({ el, onRefresh }) {
           </Text>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 }
 
