@@ -23,19 +23,18 @@ export default function DropDownList() {
         color: "#FAEBD7",
         marginTop: 5,
         borderWidth: 1,
-        backgroundColor: "#182533",
-        borderColor: "#17312b",
       }}
       dropDownContainerStyle={{
-        width: "90%",
+        width: "100%",
         color: "#FAEBD7",
         borderWidth: 1,
         borderRadius: 10,
         alignSelf: "center",
-        borderColor: "#17312b",
       }}
       theme="MyThemeName"
       placeholder="Все заказы"
+      modalAnimationType="fade"
+      dropDownDirection="AUTO"
       open={open}
       value={value}
       items={items}

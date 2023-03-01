@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, memo } from "react";
 import {
   StyleSheet,
   Text,
@@ -25,7 +25,7 @@ import { GetUserTimeLogs } from "../components/GetUserTime";
 import { Audio } from "expo-av";
 
 function ScreenDelivery({ navigation }) {
-  const currentTime = GetUserTimeLogs(new Date());
+  const currentTime = memo(GetUserTimeLogs(new Date()));
 
   const count = useLogsStore((state) => state.log);
 
@@ -33,14 +33,14 @@ function ScreenDelivery({ navigation }) {
   const onSound = useSoundToggle((state) => state.onSound);
   const offSound = useSoundToggle((state) => state.offSound);
 
-  const FilterCurentDay = () => {
+  const FilterCurentDay = memo(() => {
     const result = [
       ...count.filter(
         (e) => GetUserTimeLogs(new Date(e.WishingDate)) === currentTime
       ),
     ];
     return <Text>Доставлено {result.length} з.</Text>;
-  };
+  });
   const [point, setPoint] = useState("");
   const [isSound, setSound] = useState(soundState);
 

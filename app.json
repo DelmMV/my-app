@@ -2,7 +2,7 @@
   "expo": {
     "name": "Доставщик.85",
     "slug": "tseh85_N",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/ic_launcher_round.png",
     "userInterfaceStyle": "light",

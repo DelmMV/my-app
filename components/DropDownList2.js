@@ -52,6 +52,7 @@ export default function DropDownList2() {
       }}
       theme="MyThemeName"
       placeholder={value2}
+      modalAnimationType="fade"
       open={open}
       value={value2}
       items={items}

@@ -51,29 +51,29 @@ function PurchaseScreen({ navigation }) {
     directionsMode: "car",
   };
 
-  const increaseCount = useCountLogsStore((state) => state.increaseCount);
-  const addLogs = useLogsStore((state) => () => state.addLogs(order));
-  const logCount = useLogsStore((state) => state.log);
+  // const increaseCount = useCountLogsStore((state) => state.increaseCount);
+  // const addLogs = useLogsStore((state) => () => state.addLogs(order));
+  // const logCount = useLogsStore((state) => state.log);
 
-  const handlePostOrder = () => {
-    PostOrder({
-      Status: 7,
-      OrderID: counter,
-      CancelReasonID: 1,
-      Comment: "",
-      WishingDate: null,
-    })
-      .then((result) => {
-        console.log(result);
-        if (result.status == 200) {
-          addLogs();
-          navigation.push("ScreenDelivery");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  // const handlePostOrder = () => {
+  //   PostOrder({
+  //     Status: 7,
+  //     OrderID: counter,
+  //     CancelReasonID: 1,
+  //     Comment: "",
+  //     WishingDate: null,
+  //   })
+  //     .then((result) => {
+  //       console.log(result);
+  //       if (result.status == 200) {
+  //         addLogs();
+  //         navigation.push("ScreenDelivery");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
   const Header = memo(function Header() {
     return (

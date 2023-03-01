@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 import { Image } from "react-native-expo-image-cache";

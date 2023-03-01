@@ -48,7 +48,6 @@ export default function LoginScreen({ navigation }) {
       .catch((err) => {
         console.error(err);
       });
-    // .finally(setRefreshing(false));
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -82,7 +81,7 @@ export default function LoginScreen({ navigation }) {
         onPress={handleLogin}
         disabled={validationButtonDisabled()}
       >
-        {isRefreshing ? (
+        {!isRefreshing ? (
           <Text style={styles.textButton}>Войти</Text>
         ) : (
           <ActivityIndicator size="small" style={{ top: 8 }} />

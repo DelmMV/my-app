@@ -90,6 +90,18 @@ export function Post({ el, onRefresh }) {
       },
     ]);
 
+  const colorTime = () => {
+    const curentDate = new Date().getTime();
+    const timeDifference = el.WishingDate - curentDate;
+    if (el.Status === 7) {
+      return "grey";
+    }
+    if (timeDifference >= 1800000) {
+      return "#FAEBD7";
+    }
+    return timeDifference <= 900000 ? "red" : "orange";
+  };
+
   useEffect(() => {
     progress.value = withTiming(1);
     scale.value = withSpring(1);
@@ -145,7 +157,10 @@ export function Post({ el, onRefresh }) {
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.text}>
-            Желаемое время: {GetUserTime(new Date(el.WishingDate))}
+            Желаемое время:{" "}
+            <Text style={{ color: colorTime(), fontWeight: "bold" }}>
+              {GetUserTime(new Date(el.WishingDate))}
+            </Text>
           </Text>
           <Text
             style={{
@@ -187,9 +202,9 @@ export function Post({ el, onRefresh }) {
             <></>
           )}
         </TouchableOpacity>
-        {el.Status === 7 ? (
+        {el.Status === 6 ? (
           <TouchableOpacity
-            disabled={el.Status === 7 ? false : true}
+            disabled={el.Status === 6 ? false : true}
             onPress={alertHandlePostOrder}
           >
             <Text style={styles.button}>
