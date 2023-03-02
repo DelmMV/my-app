@@ -24,6 +24,7 @@ import QRCode from "react-qr-code";
 import GetUserTime from "../components/GetUserTime";
 import { WishesOrder } from "../components/WishesOrder";
 import { useCountLogsStore, useLogsStore } from "../contexts/store";
+import * as Linking from "expo-linking";
 
 function PurchaseScreen({ navigation }) {
   const [order, setOrder] = useState(0);
@@ -127,9 +128,11 @@ function PurchaseScreen({ navigation }) {
           ) : (
             <></>
           )}
-
-          <Text style={styles.infotext}>Телефон: +{order.ClientPhone}</Text>
-
+          <TouchableOpacity
+            onPress={() => Linking.openURL(`tel: +${order.ClientPhone}`)}
+          >
+            <Text style={styles.infotext}>Телефон: +{order.ClientPhone}</Text>
+          </TouchableOpacity>
           <Text style={styles.infotext}>
             Желаемое время получения: {GetUserTime(new Date(order.WishingDate))}
           </Text>
@@ -155,9 +158,11 @@ function PurchaseScreen({ navigation }) {
           ) : (
             <View></View>
           )}
-          <Text style={[styles.infotext, { width: "95%" }]}>
-            Адрес: {order.Address}
-          </Text>
+          <TouchableOpacity onPress={() => showLocation(options)}>
+            <Text style={[styles.infotext, { width: "95%" }]}>
+              Адрес: {order.Address}
+            </Text>
+          </TouchableOpacity>
         </View>
         <MapView
           loadingEnabled={true}
