@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import axios from "axios";
 import { featchPost } from "../api/index";
 import AppContext from "../contexts/AppContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useFetchPosts = function useFetchPosts() {
   const { setItem } = useContext(AppContext);
@@ -11,18 +11,11 @@ export const useFetchPosts = function useFetchPosts() {
   const ref = useRef(null);
 
   useEffect(() => {
-    let isCanceled = false;
-    featchPost().then((newPosts) => {
-      if (!isCanceled) {
-        setItem(newPosts);
-        setPosts(newPosts);
-        setLoading(false);
-      }
+    featchPost().then(async (newPosts) => {
+      setItem(newPosts);
+      setPosts(newPosts);
+      setLoading(false);
     });
-
-    return () => {
-      isCanceled = true;
-    };
   }, []);
 
   useEffect(() => {
@@ -52,3 +45,10 @@ export const useFetchPosts = function useFetchPosts() {
 
   return { isLoading, posts, onRefresh, isRefreshing };
 };
+
+// const fetcher = () => featchPost();
+// export function useFetchPostsSwr() {
+//   const { data, error } = useSWR(fetcher);
+//   console.log(data);
+// }
+// console.log(fetcher());

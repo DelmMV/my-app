@@ -25,6 +25,7 @@ import Animated, {
   withTiming,
   withSpring,
 } from "react-native-reanimated";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 export function Post({ el, onRefresh }) {
   const count = useLogsStore((state) => state.log);
@@ -207,17 +208,19 @@ export function Post({ el, onRefresh }) {
             disabled={el.Status === 6 ? false : true}
             onPress={alertHandlePostOrder}
           >
-            <Text style={styles.button}>
-              {!isRefreshing ? (
+            {!isRefreshing ? (
+              <Text style={styles.button}>
                 <Ionicons
                   name="checkmark-circle-outline"
                   size={22}
                   color="white"
                 />
-              ) : (
+              </Text>
+            ) : (
+              <Pressable style={styles.button}>
                 <ActivityIndicator size="small" />
-              )}
-            </Text>
+              </Pressable>
+            )}
           </TouchableOpacity>
         ) : (
           <></>

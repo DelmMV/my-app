@@ -25,7 +25,7 @@ import { GetUserTimeLogs } from "../components/GetUserTime";
 import { Audio } from "expo-av";
 
 function ScreenDelivery({ navigation }) {
-  const currentTime = memo(GetUserTimeLogs(new Date()));
+  const currentTime = GetUserTimeLogs(new Date());
 
   const count = useLogsStore((state) => state.log);
 
