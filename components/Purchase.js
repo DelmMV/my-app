@@ -1,5 +1,5 @@
-import React, { memo, useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import React, { memo, useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useFetchhPictureId } from "../hooks/useFetchPictureId";
 import { Image } from "react-native-expo-image-cache";
 import Animated, {
@@ -13,6 +13,7 @@ export default Purchase = memo(function Purchase({ el }) {
   const { isLoading, pictureId, onRefresh, isRefreshing } = useFetchhPictureId(
     el.PictureId
   );
+  const [isCheck, setIsCheck] = useState(false);
   const uri = `${pictureId.baseURL}${pictureId.url}`;
 
   const scale = useSharedValue(0);
@@ -57,51 +58,72 @@ export default Purchase = memo(function Purchase({ el }) {
     return <Text style={[styles.quantity]}>{el.Quantity}шт.</Text>;
   };
 
+  const CheckList = () => {
+    if (isCheck) {
+      return (
+        <Text
+          style={[
+            styles.text,
+            {
+              textDecorationLine: "line-through",
+              color: "green",
+              fontStyle: "italic",
+            },
+          ]}
+        >
+          {el.ProductName}
+        </Text>
+      );
+    }
+    return <Text style={styles.text}>{el.ProductName}</Text>;
+  };
+
   useEffect(() => {
     progress.value = withTiming(3);
     scale.value = withSpring(1);
   }, []);
 
   return (
-    <Animated.View style={[styles.container, reanimatedStyle]}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignContent: "space-around",
-          paddingTop: 10,
-        }}
-      >
-        <Image
-          defaultSource={{ uri: uri, cache: "default" }}
+    <TouchableOpacity onPress={() => setIsCheck(!isCheck)}>
+      <Animated.View style={[styles.container, reanimatedStyle]}>
+        <View
           style={{
-            width: 45,
-            height: 45,
-            borderRadius: 10,
-            margin: 5,
+            flexDirection: "row",
+            alignContent: "space-around",
+            paddingTop: 10,
           }}
-        />
-
-        <View style={{ flexDirection: "column" }}>
-          <Text style={styles.text}>{el.ProductName}</Text>
-          <Text style={styles.subText}>{el.CatalogName}</Text>
-          <Text
+        >
+          <Image
+            defaultSource={{ uri: uri, cache: "default" }}
             style={{
-              color: "orange",
-              textAlign: "left",
-              fontSize: 12,
-              position: "relative",
-              width: 220,
+              width: 45,
+              height: 45,
+              borderRadius: 10,
+              margin: 5,
             }}
-          >
-            <ProductsSerch />
-          </Text>
-        </View>
-      </View>
+          />
 
-      <View>
-        <QuantityMarket />
-      </View>
-    </Animated.View>
+          <View style={{ flexDirection: "column" }}>
+            <CheckList />
+            <Text style={styles.subText}>{el.CatalogName}</Text>
+            <Text
+              style={{
+                color: "orange",
+                textAlign: "left",
+                fontSize: 12,
+                position: "relative",
+                width: 220,
+              }}
+            >
+              <ProductsSerch />
+            </Text>
+          </View>
+        </View>
+        <View>
+          <QuantityMarket />
+        </View>
+      </Animated.View>
+    </TouchableOpacity>
   );
 });
 

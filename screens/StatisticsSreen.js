@@ -160,6 +160,7 @@ export default function StatisticsSreen({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
+    marginTop: 10,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#17212b",
     flex: 1,

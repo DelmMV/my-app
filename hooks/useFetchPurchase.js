@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { fetchPurchase } from "../api/index";
 
 export function useFetchPurchase(id) {
+  console.log("useFetchPurchase");
   const [isLoading, setLoading] = useState(true);
   const [isRefreshing, setRefreshing] = useState(false);
   const [purchase, setPurchase] = useState([]);

@@ -25,10 +25,11 @@ import Animated, {
   withTiming,
   withSpring,
 } from "react-native-reanimated";
+import GetOrder from "./GetOrder";
+
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 export function Post({ el, onRefresh }) {
-  const count = useLogsStore((state) => state.log);
   const addLogs = useLogsStore((state) => () => state.addLogs(el));
   const color = ColorStatus(el);
   const { value2 } = useContext(AppContext);
@@ -40,6 +41,7 @@ export function Post({ el, onRefresh }) {
   };
   const { setCounter } = useContext(AppContext);
   const [showWishes, setShowWishes] = useState(false);
+  const [showORder, setShowOrder] = useState(false);
   const [isRefreshing, setRefreshing] = useState(false);
 
   const navigation = useNavigation();
@@ -80,6 +82,27 @@ export function Post({ el, onRefresh }) {
       });
   };
 
+  const handlePostOrderСheckout = () => {
+    setRefreshing(true);
+    PostOrder({
+      Status: 5,
+      OrderID: el.OrderId,
+      CancelReasonID: 1,
+      Comment: "",
+      WishingDate: null,
+    })
+      .then((result) => {
+        if (result.status == 200) {
+          setRefreshing(false);
+          setShowOrder(false);
+          onRefresh();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const alertHandlePostOrder = () =>
     Alert.alert("Внимание!", "Заказ доставлен?", [
       { text: "Нет" },
@@ -87,6 +110,17 @@ export function Post({ el, onRefresh }) {
         text: "Да",
         onPress: () => {
           handlePostOrder();
+        },
+      },
+    ]);
+
+  const alertHandlePostOrderСheckout = () =>
+    Alert.alert("Внимание!", "Провести заказа через кассу?", [
+      { text: "Нет" },
+      {
+        text: "Да",
+        onPress: () => {
+          handlePostOrderСheckout();
         },
       },
     ]);
@@ -111,12 +145,21 @@ export function Post({ el, onRefresh }) {
   return (
     <Animated.View style={[styles.container, reanimatedStyle]}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <TouchableOpacity
-          style={styles.title}
-          onPress={() => Clipboard.setString(el.DeliveryNumber)}
-        >
-          <Text style={styles.title}>Заказ #{el.DeliveryNumber}</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity onPress={() => setShowOrder(!showORder)}>
+            {showORder ? (
+              <Ionicons name="caret-up-outline" size={24} color="#FAEBD7" />
+            ) : (
+              <Ionicons name="caret-down-outline" size={24} color="#FAEBD7" />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.title, { paddingLeft: 10 }]}
+            onPress={() => Clipboard.setString(el.DeliveryNumber)}
+          >
+            <Text style={styles.title}>Заказ #{el.DeliveryNumber}</Text>
+          </TouchableOpacity>
+        </View>
         <Text
           style={[color, { fontSize: 16, fontWeight: "bold" }]}
         >{`${orderStatus[el.Status - 1].toUpperCase()}`}</Text>
@@ -144,9 +187,15 @@ export function Post({ el, onRefresh }) {
           </TouchableOpacity>
         </View>
         {Wishes(el)}
+        {el.CheckoutUserName && (
+          <Text style={styles.text}>
+            Провёл: {el.CheckoutUserName.split(" ", 2)}
+          </Text>
+        )}
+
         <View style={{ flexDirection: "row" }}>
           {el.ClientName ? (
-            <Text style={styles.text}>Клинет: {el.ClientName} </Text>
+            <Text style={styles.text}>Клиент: {el.ClientName} </Text>
           ) : (
             <></>
           )}
@@ -225,6 +274,24 @@ export function Post({ el, onRefresh }) {
         ) : (
           <></>
         )}
+        {el.Status === 5 ? (
+          <TouchableOpacity
+            disabled={el.Status === 5 ? false : true}
+            onPress={alertHandlePostOrderСheckout}
+          >
+            {!isRefreshing ? (
+              <Text style={styles.button}>
+                <Ionicons name="receipt-outline" size={22} color="white" />
+              </Text>
+            ) : (
+              <Pressable style={styles.button}>
+                <ActivityIndicator size="small" />
+              </Pressable>
+            )}
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
       </View>
       {showWishes && (
         <View
@@ -249,6 +316,7 @@ export function Post({ el, onRefresh }) {
           </Text>
         </View>
       )}
+      {showORder && <GetOrder OrderId={el.OrderId} />}
     </Animated.View>
   );
 }
@@ -275,14 +343,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   title: {
-    //textAlign: "center",
     width: 125,
-    //flex: 1,
     fontSize: 16,
     fontWeight: "bold",
     color: "#FAEBD7",
-    // borderWidth: 1,
-    // borderRadius: 5,
   },
   button: {
     width: 80,

@@ -35,7 +35,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
       if ([...newOrder.filter((e) => e.Status === 12)].length !== 0) {
         pushNotification(newOrder);
         oldOrder = newOrder;
-        console.log("Обновляем счетчик в ифе обновления счетчика");
+        console.log("Обновляем счетчик в ифе");
       }
       oldOrder = newOrder;
       console.log(`Обновляем счетчик ${oldOrder.length}`);

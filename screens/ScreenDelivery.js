@@ -10,7 +10,7 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import { useFetchPosts } from "../hooks/index";
+import useFetchPosts from "../hooks/useFetchPosts";
 import { Post, Empty } from "../components/index";
 import { StatusBar } from "expo-status-bar";
 import Navigation from "../components/Navigation";
@@ -19,6 +19,7 @@ import DropDownList from "../components/DropDownList";
 import DropDownList2 from "../components/DropDownList2";
 import AppContext from "../contexts/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import * as Clipboard from "expo-clipboard";
 import { FilterItem } from "../components/FilterItem";
 import { useLogsStore, useSoundToggle } from "../contexts/store";
 import { GetUserTimeLogs } from "../components/GetUserTime";
@@ -45,7 +46,8 @@ function ScreenDelivery({ navigation }) {
   const [isSound, setSound] = useState(soundState);
 
   const { value } = useContext(AppContext);
-  const { isLoading, posts, onRefresh, isRefreshing } = useFetchPosts();
+  const { isLoading, posts, onRefresh, isRefreshing, getIntensive } =
+    useFetchPosts();
   const filter = FilterItem(value, posts);
 
   const myPoint = async () => {
@@ -103,6 +105,11 @@ function ScreenDelivery({ navigation }) {
     ]);
   };
 
+  const copyToken = async()=>{
+    const dataToken = await AsyncStorage.getItem("AccessToken");
+    Clipboard.setString(dataToken)
+  }
+
   useEffect(() => {
     if (isSound) {
       const interval = setInterval(() => {
@@ -124,14 +131,21 @@ function ScreenDelivery({ navigation }) {
   console.log("screenD");
   return (
     <SafeAreaView style={styles.container}>
-      <View
+      <TouchableOpacity
+      onPress={()=> copyToken()}
         style={[
           styles.frame,
-          { marginTop: 25, alignSelf: "flex-start", top: 11 },
+          {
+            marginTop: 35,
+            alignSelf: "flex-start",
+            top: 11,
+            flexDirection: "row",
+          },
         ]}
       >
-        <Text style={styles.topText}> {point}</Text>
-      </View>
+        <Text style={styles.topText}> {point} ||</Text>
+        <Text style={styles.topText}> Интенсив: {getIntensive} мин.</Text>
+      </TouchableOpacity>
       <View
         style={{
           flexDirection: "row",

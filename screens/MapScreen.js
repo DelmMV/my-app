@@ -1,5 +1,5 @@
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useContext } from "react";
 import AppContext from "../contexts/AppContext";
 import GetUserTime from "../components/GetUserTime";

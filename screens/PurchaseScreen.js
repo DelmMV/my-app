@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   View,
   Platform,
-  Button,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { showLocation } from "react-native-map-link";
@@ -23,7 +22,6 @@ import { ColorStatus } from "../components/ColorStatus";
 import QRCode from "react-qr-code";
 import GetUserTime from "../components/GetUserTime";
 import { WishesOrder } from "../components/WishesOrder";
-import { useCountLogsStore, useLogsStore } from "../contexts/store";
 import * as Linking from "expo-linking";
 
 function PurchaseScreen({ navigation }) {
@@ -270,6 +268,7 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     backgroundColor: "#17212b",
+    marginTop: 5,
   },
   text: {
     color: "white",

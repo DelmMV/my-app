@@ -11,6 +11,7 @@ export default function DropDownList() {
   const { value, setValue } = useContext(AppContext);
   const [items, setItems] = useState([
     { label: "Все заказы", value: null },
+    { label: "Все без получ.", value: 13 },
     { label: "Потвержден", value: 5 },
     { label: "На доставке", value: 6 },
     { label: "Получен", value: 7 },

@@ -1,13 +1,15 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, memo } from "react";
 import { featchPost } from "../api/index";
+import { featchIntensive } from "../api/fetchIntensive";
 import AppContext from "../contexts/AppContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useFetchPosts = function useFetchPosts() {
+function useFetchPosts() {
   const { setItem } = useContext(AppContext);
   const [isLoading, setLoading] = useState(true);
   const [isRefreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [getIntensive, setGetIntensive] = useState(null);
+
   const ref = useRef(null);
 
   useEffect(() => {
@@ -43,12 +45,14 @@ export const useFetchPosts = function useFetchPosts() {
     };
   }
 
-  return { isLoading, posts, onRefresh, isRefreshing };
-};
+  useEffect(() => {
+    console.log("fetch intensive");
+    featchIntensive().then(async (newIntensive) => {
+      setGetIntensive(newIntensive);
+    });
+  }, [posts]);
 
-// const fetcher = () => featchPost();
-// export function useFetchPostsSwr() {
-//   const { data, error } = useSWR(fetcher);
-//   console.log(data);
-// }
-// console.log(fetcher());
+  return { isLoading, posts, onRefresh, isRefreshing, getIntensive };
+}
+
+export default useFetchPosts;
