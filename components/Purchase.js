@@ -31,7 +31,7 @@ export default Purchase = memo(function Purchase({ el }) {
     let products2 = "";
     if (products) {
       products.forEach((element) => {
-        products2 += `— ${element.ProductName}\n`;
+        products2 += `— ${element.ProductName} ${element.Quantity}шт.\n`;
       });
     }
     return <Text>{products2}</Text>;
